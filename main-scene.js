@@ -1,161 +1,5 @@
-
-window.Cylinder_Cube
-
-window.Cube = window.classes.Cube =
-class Cube extends Shape                 // Here's a complete, working example of a Shape subclass.  It is a blueprint for a cube.
-  { constructor()
-      { super( "positions", "normals" ); // Name the values we'll define per each vertex.  They'll have positions and normals.
-
-        // First, specify the vertex positions -- just a bunch of points that exist at the corners of an imaginary cube.
-        this.positions.push( ...Vec.cast( [-1,-1,-1], [1,-1,-1], [-1,-1,1], [1,-1,1], [1,1,-1],  [-1,1,-1],  [1,1,1],  [-1,1,1],
-                                          [-1,-1,-1], [-1,-1,1], [-1,1,-1], [-1,1,1], [1,-1,1],  [1,-1,-1],  [1,1,1],  [1,1,-1],
-                                          [-1,-1,1],  [1,-1,1],  [-1,1,1],  [1,1,1], [1,-1,-1], [-1,-1,-1], [1,1,-1], [-1,1,-1] ) );
-        // Supply vectors that point away from eace face of the cube.  They should match up with the points in the above list
-        // Normal vectors are needed so the graphics engine can know if the shape is pointed at light or not, and color it accordingly.
-        this.normals.push(   ...Vec.cast( [0,-1,0], [0,-1,0], [0,-1,0], [0,-1,0], [0,1,0], [0,1,0], [0,1,0], [0,1,0], [-1,0,0], [-1,0,0],
-                                          [-1,0,0], [-1,0,0], [1,0,0],  [1,0,0],  [1,0,0], [1,0,0], [0,0,1], [0,0,1], [0,0,1],   [0,0,1],
-                                          [0,0,-1], [0,0,-1], [0,0,-1], [0,0,-1] ) );
-      
-         this.indices.push( 0, 1, 2, 1, 3, 2, 4, 5, 6, 5, 7, 6, 8, 9, 10, 9, 11, 10, 12, 13,
-                          14, 13, 15, 14, 16, 17, 18, 17, 19, 18, 20, 21, 22, 21, 23, 22 );
-        // It stinks to manage arrays this big.  Later we'll show code that generates these same cube vertices more automatically.
-      }
-  }
-
-window.Transforms_Sandbox = window.classes.Transforms_Sandbox =
-class Transforms_Sandbox extends Tutorial_Animation   // This subclass of some other Scene overrides the display() function.  By only
-{ display( graphics_state )                           // exposing that one function, which draws everything, this creates a very small code
-                                                      // sandbox for editing a simple scene, and for experimenting with matrix transforms.
-    { let model_transform = Mat4.identity();      // Variable model_transform will be a temporary matrix that helps us draw most shapes.
-                                                  // It starts over as the identity every single frame - coordinate axes at the origin.
-      graphics_state.lights = this.lights;        // Use the lights stored in this.lights.
-      const testvec=Vec.of(0,1,1);
-      const blue = Color.of( 0,0,1,1 ), yellow = Color.of( 1,1,0,1 );
-      model_transform = model_transform.times( Mat4.translation([ 0, 3, 20 ]) );
-      this.shapes.box.draw( graphics_state, model_transform, this.plastic.override({ color: yellow }) );   // Draw the top box.
-
-      const t = this.t = graphics_state.animation_time/1000;     // Find how much time has passed in seconds, and use that to place shapes.
-
-      model_transform = model_transform.times( Mat4.translation([ 0, -2, 0 ]) );  // Tweak our coordinate system downward for the next shape.
-      this.shapes.ball.draw( graphics_state, model_transform, this.plastic.override({ color: blue }) );    // Draw the ball.
-
-      if( !this.hover )     // The first line below won't execute if the button on the page has been toggled:
-        model_transform = model_transform.times( Mat4.rotation( t, Vec.of( 0,1,0 ) ) )  // Spin our coordinate frame as a function of time.
-      model_transform   = model_transform.times( Mat4.rotation( 1, Vec.of( 0,0,1 ) ) )  // Rotate another axis by a constant value.
-                                         .times( Mat4.scale      ([ 1,   2, 1 ]) )      // Stretch the coordinate frame.
-                                         .times( Mat4.translation([ 0,-1.5, 0 ]) );     // Translate down enough for the two volumes to miss.
-      this.shapes.box.draw( graphics_state, model_transform, this.plastic.override({ color: yellow }) );   // Draw the bottom box.
-    }
-}
-
-window.Cube_Outline = window.classes.Cube_Outline =
-class Cube_Outline extends Shape
-  { constructor()
-      { super( "positions", "colors" ); // Name the values we'll define per each vertex.
-
-        const white_c=Color.of(1,1,1,1);
-
-        this.positions.push( 
-          ...Vec.cast(
-
-   [-1,-1,-1],[-1,-1,1], //z good
-     [-1,1,1],[-1,1,-1], //this is 2.
-         [-1,-1,1],[-1,1,1],
-
-   [-1,1,-1],[-1,-1,-1], // z pos on left edge> //also part of the connect
- 
-    //front ccw
-
- [-1,-1,1],[1,-1,1],
-  [1,1,1], [1,-1,1],
-  [1,1,1],[-1,1,1],
-
-
-//right face ccw 
-  [1,-1,1],[1,-1,-1], //is this not a reflect of 2? z direction movement?
-  [1,-1,-1],[1,1,-1],
-  [1,1,-1],[1,1,1],
-
-  //back top
- // [1,-1,-1],[1,1,-1], //this one too.
-  [1,1,-1],[-1,1,-1], //this is the only one that did something 
-  //bottom face
-  [1,-1,-1],[-1,-1,-1],
-
-          );
-        this.colors=[white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c,white_c];
-
-
-        this.indexed = false;       // Do this so we won't need to define "this.indices".
-      }
-  }
-
-window.Cube_Single_Strip = window.classes.Cube_Single_Strip =
-class Cube_Single_Strip extends Shape
-  { constructor()
-      { super( "positions", "normals" );
-
-          let a=[-1,-1,-1];
-          let b=[1,-1,-1];
-          let c=[-1,1,-1];
-          let d=[1,1,-1];
-          let e=[-1,-1,1];
-          let f=[1,-1,1];
-          let g=[-1,1,1];
-          let h=[1,1,1];
-
-
-        // TODO (Extra credit part I)
-        this.positions.push( ...Vec.cast(
-          a,b,
-          c,d,
-          e,f,
-          g,h
-         
-         )
-          ); 
-
-        //normals facing away from the cube.
-        this.normals.push( ...Vec.cast( a, b, c, d, e, f, g, h 
-          ) ); 
-        this.indices.push( //pain in the fking ass to draw...           
-          0, 1, //test
-          2,
-          
-          0,1, 
-          4,
-
-          0, 4,
-          6,
-
-          4, 
-          5, 6,
-
-          1, 4,
-          5, 
-
-          1,
-          5, 7,
-
-          5, 6, 
-          7, 
-
-          3,
-          6, 7,
-
-          1, 3, 
-          7,
-
-          1, 
-          2, 3, 
-
-          2, 3, 
-          6,
-
-          0, 
-          2, 6);
-      }
-  }
+var use_mipMap2=false;
+var use_mipMap1=true;
 
 window.Assignment_Three_Scene = window.classes.Assignment_Three_Scene =
 class Assignment_Three_Scene extends Scene_Component
@@ -174,8 +18,14 @@ class Assignment_Three_Scene extends Scene_Component
                          torus2: new ( Torus.prototype.make_flat_shaded_version() )( 15, 15 ),
 
                          // Kitchen cutting scene materials
-                         cylinder: new Subdivision_Sphere(), // for the knife's handle.
-                         board: new Cube() //for the cutting board, and the knife
+                         //cylinder: new Subdivision_Sphere(), // for the knife's handle.
+                         //board: new Cube() //for the cutting board, and the knife
+                      
+                       beef:      new STL_Shape_From_File( "assets/food/beef.stl" ) ,
+                       carrot:      new STL_Shape_From_File( "assets/food/carrot.stl" ) ,
+                       onion:      new STL_Shape_From_File( "assets/food/onion.stl" ) ,
+                       potato:      new STL_Shape_From_File( "assets/food/potato.stl" ) ,
+                       allfood: new Shape_From_File("assets/food/foods.obj"),
                        }
         this.submit_shapes( context, shapes );
                                      
@@ -188,9 +38,26 @@ class Assignment_Three_Scene extends Scene_Component
                                 //        (Requirement 1)
             sun:      context.get_instance( Phong_Shader ).material( Color.of( 0,0,0,1 ), { ambient: 1 } ),
            
+
+
+
+           beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}) ,
+           carrot:        context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}) ,
+           onion:        context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}),
+           potato:       context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}) ,
+           allfood:   context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}),
+
           }
 
-        this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 0, 1, 1, 1 ), 1000 ) ];
+
+          this.allfood=Mat4.identity();
+          this.allfood=this.allfood.times(Mat4.translation(Vec.of(2,0,0)));
+
+
+          this.beef=Mat4.identity();
+          this.beef=this.beef.times(Mat4.translation(Vec.of(-5,0,0)));
+
+        this.lights = [ new Light( Vec.of( -5,5,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
       }
     make_control_panel()            // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
       { this.key_triggered_button( "View solar system",  [ "0" ], () => this.attached = () => this.initial_camera_location );
@@ -204,10 +71,13 @@ class Assignment_Three_Scene extends Scene_Component
       }
     display( graphics_state )
       { graphics_state.lights = this.lights;        // Use the lights stored in this.lights.
+        
         const t = graphics_state.animation_time / 1000, dt = graphics_state.animation_delta_time / 1000;
 
         
 
+        this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef);
+        //this.shapes.allfood.draw(graphics_state,this.allfood,this.materials.beef);
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 2 and 3)
 
         let radius = 2 + Math.sin( (2*Math.PI/10)*t ); //2 is the middle radius.
@@ -216,13 +86,10 @@ class Assignment_Three_Scene extends Scene_Component
         let sun_matrix = Mat4.identity().times(Mat4.scale([radius,radius,radius]));
         let sun_color = Color.of(red,0,1-red,1);
         graphics_state.lights = [ new Light(Vec.of(0,0,0,1),sun_color, 10**radius) ];
-        this.shapes.sub_4.draw(graphics_state,sun_matrix,this.materials.sun.override({color: sun_color}));
 
         let planet_1_matrix = Mat4.identity();
         planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.85*t, Vec.of(0,1,0)) ).times(Mat4.translation([5,0,0]))
-        this.planet_1 = planet_1_matrix;
         planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.5*t, Vec.of(0,1,0)))
-        this.shapes.sub_2.draw( graphics_state, planet_1_matrix, this.materials.planet1 )
  
         if (this.attached != undefined) {
           var desired = this.attached().times(Mat4.translation([0,0,5]))
