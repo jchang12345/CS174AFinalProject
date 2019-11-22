@@ -11,7 +11,7 @@ class Assignment_Three_Scene extends Scene_Component
         if( !context.globals.has_controls   ) 
           context.register_scene_component( new Movement_Controls( context, control_box.parentElement.insertCell() ) ); 
 
-        context.globals.graphics_state.camera_transform = Mat4.look_at( Vec.of( 1,4,-3 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) );
+        context.globals.graphics_state.camera_transform = Mat4.look_at( Vec.of( 6,16,-3 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) );
         this.initial_camera_location = Mat4.inverse( context.globals.graphics_state.camera_transform );
 
         const r = context.width/context.height;
@@ -31,7 +31,7 @@ class Assignment_Three_Scene extends Scene_Component
                        allfood: new Shape_From_File("assets/food/foods.obj"),
                        }
         this.submit_shapes( context, shapes );
-                                     
+                              
                                      // Make some Material objects available to you:
         this.materials =
           { test:     context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ), { ambient:.2 } ),
@@ -50,9 +50,11 @@ class Assignment_Three_Scene extends Scene_Component
 
           }
 
+          this.score=0;
 
-          //this.allfood=Mat4.identity();
-         // this.allfood=this.allfood.times(Mat4.translation(Vec.of(2,0,0)));
+
+          this.allfood=Mat4.identity();
+          this.allfood=this.allfood.times(Mat4.translation(Vec.of(2,0,0)));
 
 
           this.beef=Mat4.identity();
@@ -63,19 +65,28 @@ class Assignment_Three_Scene extends Scene_Component
 
           this.onion=Mat4.identity();
           this.onion=this.onion.times(Mat4.translation(Vec.of(0,0,0)));
-
+          this.restartflag=false;
         this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
       }
     make_control_panel()            // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-      { this.key_triggered_button( "View solar system",  [ "0" ], () => this.attached = () => this.initial_camera_location );
+      { this.key_triggered_button( "Cutting Scene",  [ "c" ], () => this.attached = () => this.initial_camera_location );
         this.new_line();
-        this.key_triggered_button( "Attach to planet 1", [ "1" ], () => this.attached = () => this.planet_1 );
-        this.key_triggered_button( "Attach to planet 2", [ "2" ], () => this.attached = () => this.planet_2 ); this.new_line();
-        this.key_triggered_button( "Attach to planet 3", [ "3" ], () => this.attached = () => this.planet_3 );
-        this.key_triggered_button( "Attach to planet 4", [ "4" ], () => this.attached = () => this.planet_4 ); this.new_line();
-        this.key_triggered_button( "Attach to planet 5", [ "5" ], () => this.attached = () => this.planet_5 );
-        this.key_triggered_button( "Attach to moon",     [ "m" ], () => this.attached = () => this.moon     );
+        this.key_triggered_button( "Food Drop Scene 2", [ "p" ], () => this.attached = () => this.planet_1 );
+        this.key_triggered_button( "Mixing Scene 3", [ "m" ], () => this.attached = () => this.planet_2 ); this.new_line();
+        this.key_triggered_button( "Finished Product, Scene 4", [ "f" ], () => this.attached = () => this.planet_3 );
+        this.key_triggered_button( "Restart",     [ "r" ], () => this.attached = () => this.moon     );
       }
+      //displays UI for score
+      UI()
+      {
+            var score = document.getElementById("score");
+            //score.innerHTML = this.score;
+            var gameOver = document.getElementById("gameover");
+
+      }
+
+
+
     display( graphics_state )
       { graphics_state.lights = this.lights;        // Use the lights stored in this.lights.
         
@@ -87,7 +98,7 @@ class Assignment_Three_Scene extends Scene_Component
         this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.carrot);
         this.shapes.onion.draw(graphics_state,this.onion,this.materials.onion);
 
-        //this.shapes.allfood.draw(graphics_state,this.allfood,this.materials.allfood);
+        this.shapes.allfood.draw(graphics_state,this.allfood,this.materials.allfood);
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 2 and 3)
 
         //graphics_state.lights = [ new Light(Vec.of(0,0,0,1),sun_color, 10**radius) ];
@@ -102,7 +113,14 @@ class Assignment_Three_Scene extends Scene_Component
           desired = desired.map( (x,i) => Vec.from( graphics_state.camera_transform[i] ).mix( x, .1 ) )
           graphics_state.camera_transform = desired;
         }
+
+        this.UI();
+
       }
+
+
+
+
   }
 
 
