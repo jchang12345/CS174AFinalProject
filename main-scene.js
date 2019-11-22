@@ -11,8 +11,9 @@ class Assignment_Three_Scene extends Scene_Component
         if( !context.globals.has_controls   ) 
           context.register_scene_component( new Movement_Controls( context, control_box.parentElement.insertCell() ) ); 
 
-        context.globals.graphics_state.camera_transform = Mat4.look_at( Vec.of( 1,4,-3 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) );
-        this.initial_camera_location = Mat4.inverse( context.globals.graphics_state.camera_transform );
+        context.globals.graphics_state.camera_transform = Mat4.look_at( Vec.of( 0,0,5 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) );
+        let c_transform = Mat4.translation([0,0,-10])
+        context.globals.graphics_state.camera_transform = context.globals.graphics_state.camera_transform.times(c_transform)
 
         const r = context.width/context.height;
         context.globals.graphics_state.projection_transform = Mat4.perspective( Math.PI/4, r, .1, 1000 );
@@ -24,11 +25,11 @@ class Assignment_Three_Scene extends Scene_Component
                          //cylinder: new Subdivision_Sphere(), // for the knife's handle.
                          //board: new Cube() //for the cutting board, and the knife
                       
-                       beef:      new Shape_From_File( "assets/food/beefv1.obj" ) ,
-                       carrot:      new Shape_From_File( "assets/food/carrotv1.obj" ) ,
-                       onion:      new Shape_From_File( "assets/food/onionv1.obj" ) ,
-                       potato:      new Shape_From_File( "assets/food/potatov1.obj" ) ,
-                       allfood: new Shape_From_File("assets/food/foods.obj"),
+                       beef:      new Shape_From_File( "assets/food/beef.obj" ) ,
+                       carrot:      new Shape_From_File( "assets/food/carrot.obj" ) ,
+                       onion:      new Shape_From_File( "assets/food/onion.obj" ) ,
+                       potato:      new Shape_From_File( "assets/food/potato.obj" ) ,
+                       //allfood: new Shape_From_File("assets/food/foods.obj"),
                        }
         this.submit_shapes( context, shapes );
                                      
@@ -42,10 +43,10 @@ class Assignment_Three_Scene extends Scene_Component
 
 
 
-           beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,.4,1), {ambient:0.8,specularity:1,diffusivity:0.25}) ,
+           beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,.4,1), {ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
            carrot:        context.get_instance(Phong_Shader).material(Color.of(.4,0,0,1), {ambient:0.3}) ,
            onion:        context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.4}),
-           potato:       context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:0.1}) ,
+           potato:       context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.3}) ,
            allfood:   context.get_instance(Phong_Shader).material(Color.of(0.3,0.3,0.3,1), {ambient:1}),
 
           }
@@ -59,10 +60,13 @@ class Assignment_Three_Scene extends Scene_Component
           this.beef=this.beef.times(Mat4.translation(Vec.of(5,0,0)));
 
           this.carrot=Mat4.identity();
-          this.carrot=this.carrot.times(Mat4.translation(Vec.of(5,5,0)));
+          this.carrot=this.carrot.times(Mat4.translation(Vec.of(5,5,0))).times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
 
           this.onion=Mat4.identity();
-          this.onion=this.onion.times(Mat4.translation(Vec.of(0,0,0)));
+          this.onion=this.onion.times(Mat4.translation(Vec.of(0,0,0)))
+
+          this.potato=Mat4.identity();
+          this.potato = this.onion.times(Mat4.translation(Vec.of(-5,0,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
 
         this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
       }
@@ -86,6 +90,7 @@ class Assignment_Three_Scene extends Scene_Component
         this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef);
         this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.carrot);
         this.shapes.onion.draw(graphics_state,this.onion,this.materials.onion);
+        this.shapes.potato.draw(graphics_state,this.potato,this.materials.potato);
 
         //this.shapes.allfood.draw(graphics_state,this.allfood,this.materials.allfood);
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 2 and 3)
