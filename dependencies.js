@@ -340,7 +340,6 @@ class Phong_Shader extends Shader          // THE DEFAULT SHADER: This uses the 
                 float attenuation_multiplier = 1.0 / (1.0 + attenuation_factor[i] * (dist[i] * dist[i]));
                 float diffuse  =      max( dot(N, L[i]), 0.0 );
                 float specular = pow( max( dot(N, H[i]), 0.0 ), smoothness );
-
                 result += attenuation_multiplier * ( shapeColor.xyz * diffusivity * diffuse + lightColor[i].xyz * specularity * specular );
               }
             return result;
@@ -351,10 +350,8 @@ class Phong_Shader extends Shader          // THE DEFAULT SHADER: This uses the 
     { return `
         attribute vec3 object_space_pos, normal;
         attribute vec2 tex_coord;
-
         uniform mat4 camera_transform, camera_model_transform, projection_camera_model_transform;
         uniform mat3 inverse_transpose_modelview;
-
         void main()
         { gl_Position = projection_camera_model_transform * vec4(object_space_pos, 1.0);     // The vertex's final resting place (in NDCS).
           N = normalize( inverse_transpose_modelview * normal );                             // The final normal vector in screen space.
@@ -369,7 +366,6 @@ class Phong_Shader extends Shader          // THE DEFAULT SHADER: This uses the 
                                                   // The rest of this shader calculates some quantities that the Fragment shader will need:
           vec3 screen_space_pos = ( camera_model_transform * vec4(object_space_pos, 1.0) ).xyz;
           E = normalize( -screen_space_pos );
-
           for( int i = 0; i < N_LIGHTS; i++ )
           {            // Light positions use homogeneous coords.  Use w = 0 for a directional light source -- a vector instead of a point.
             L[i] = normalize( ( camera_transform * lightPosition[i] ).xyz - lightPosition[i].w * screen_space_pos );
@@ -379,7 +375,6 @@ class Phong_Shader extends Shader          // THE DEFAULT SHADER: This uses the 
             dist[i]  = lightPosition[i].w > 0.0 ? distance((camera_transform * lightPosition[i]).xyz, screen_space_pos)
                                                 : distance( attenuation_factor[i] * -lightPosition[i].xyz, object_space_pos.xyz );
           }
-
           if( GOURAUD )                   // Gouraud shading mode?  If so, finalize the whole color calculation here in the vertex shader, 
           {                               // one per vertex, before we even break it down to pixels in the fragment shader.   As opposed 
                                           // to Smooth "Phong" Shading, where we *do* wait to calculate final color until the next shader.

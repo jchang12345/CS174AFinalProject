@@ -1,3 +1,6 @@
+//Justin Chang
+//UID: 504732893
+//github: jchang12345
 var use_mipMap2=false;
 var use_mipMap1=true;
 
@@ -8,7 +11,7 @@ class Assignment_Three_Scene extends Scene_Component
         if( !context.globals.has_controls   ) 
           context.register_scene_component( new Movement_Controls( context, control_box.parentElement.insertCell() ) ); 
 
-        context.globals.graphics_state.camera_transform = Mat4.look_at( Vec.of( 0,10,20 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) );
+        context.globals.graphics_state.camera_transform = Mat4.look_at( Vec.of( 1,4,-3 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) );
         this.initial_camera_location = Mat4.inverse( context.globals.graphics_state.camera_transform );
 
         const r = context.width/context.height;
@@ -21,10 +24,10 @@ class Assignment_Three_Scene extends Scene_Component
                          //cylinder: new Subdivision_Sphere(), // for the knife's handle.
                          //board: new Cube() //for the cutting board, and the knife
                       
-                       beef:      new STL_Shape_From_File( "assets/food/beef.stl" ) ,
-                       carrot:      new STL_Shape_From_File( "assets/food/carrot.stl" ) ,
-                       onion:      new STL_Shape_From_File( "assets/food/onion.stl" ) ,
-                       potato:      new STL_Shape_From_File( "assets/food/potato.stl" ) ,
+                       beef:      new Shape_From_File( "assets/food/beefv1.obj" ) ,
+                       carrot:      new Shape_From_File( "assets/food/carrotv1.obj" ) ,
+                       onion:      new Shape_From_File( "assets/food/onionv1.obj" ) ,
+                       potato:      new Shape_From_File( "assets/food/potatov1.obj" ) ,
                        allfood: new Shape_From_File("assets/food/foods.obj"),
                        }
         this.submit_shapes( context, shapes );
@@ -32,32 +35,36 @@ class Assignment_Three_Scene extends Scene_Component
                                      // Make some Material objects available to you:
         this.materials =
           { test:     context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ), { ambient:.2 } ),
-            ring:     context.get_instance( Ring_Shader  ).material(),
 
                                 // TODO:  Fill in as many additional material objects as needed in this key/value table.
                                 //        (Requirement 1)
-            sun:      context.get_instance( Phong_Shader ).material( Color.of( 0,0,0,1 ), { ambient: 1 } ),
            
 
 
 
-           beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}) ,
-           carrot:        context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}) ,
-           onion:        context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}),
-           potato:       context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}) ,
-           allfood:   context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1}),
+           beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,.4,1), {ambient:0.8,specularity:1,diffusivity:0.25}) ,
+           carrot:        context.get_instance(Phong_Shader).material(Color.of(.4,0,0,1), {ambient:0.3}) ,
+           onion:        context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.4}),
+           potato:       context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:0.1}) ,
+           allfood:   context.get_instance(Phong_Shader).material(Color.of(0.3,0.3,0.3,1), {ambient:1}),
 
           }
 
 
-          this.allfood=Mat4.identity();
-          this.allfood=this.allfood.times(Mat4.translation(Vec.of(2,0,0)));
+          //this.allfood=Mat4.identity();
+         // this.allfood=this.allfood.times(Mat4.translation(Vec.of(2,0,0)));
 
 
           this.beef=Mat4.identity();
-          this.beef=this.beef.times(Mat4.translation(Vec.of(-5,0,0)));
+          this.beef=this.beef.times(Mat4.translation(Vec.of(5,0,0)));
 
-        this.lights = [ new Light( Vec.of( -5,5,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
+          this.carrot=Mat4.identity();
+          this.carrot=this.carrot.times(Mat4.translation(Vec.of(5,5,0)));
+
+          this.onion=Mat4.identity();
+          this.onion=this.onion.times(Mat4.translation(Vec.of(0,0,0)));
+
+        this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
       }
     make_control_panel()            // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
       { this.key_triggered_button( "View solar system",  [ "0" ], () => this.attached = () => this.initial_camera_location );
@@ -77,19 +84,17 @@ class Assignment_Three_Scene extends Scene_Component
         
 
         this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef);
-        //this.shapes.allfood.draw(graphics_state,this.allfood,this.materials.beef);
+        this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.carrot);
+        this.shapes.onion.draw(graphics_state,this.onion,this.materials.onion);
+
+        //this.shapes.allfood.draw(graphics_state,this.allfood,this.materials.allfood);
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 2 and 3)
 
-        let radius = 2 + Math.sin( (2*Math.PI/10)*t ); //2 is the middle radius.
-        let red = 0.5 + 0.5*Math.sin( (2*Math.PI/10)*t ); //0.5 is the middle shade.
+        //graphics_state.lights = [ new Light(Vec.of(0,0,0,1),sun_color, 10**radius) ];
 
-        let sun_matrix = Mat4.identity().times(Mat4.scale([radius,radius,radius]));
-        let sun_color = Color.of(red,0,1-red,1);
-        graphics_state.lights = [ new Light(Vec.of(0,0,0,1),sun_color, 10**radius) ];
-
-        let planet_1_matrix = Mat4.identity();
-        planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.85*t, Vec.of(0,1,0)) ).times(Mat4.translation([5,0,0]))
-        planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.5*t, Vec.of(0,1,0)))
+        //let planet_1_matrix = Mat4.identity();
+        //planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.85*t, Vec.of(0,1,0)) ).times(Mat4.translation([5,0,0]))
+        //planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.5*t, Vec.of(0,1,0)))
  
         if (this.attached != undefined) {
           var desired = this.attached().times(Mat4.translation([0,0,5]))
