@@ -5,7 +5,9 @@ Justin-2,3(I want to work on this at least boilerplating it at least for step 2 
 
 Justin-In 4b, I'll focus on point 3 and maybe 4 after 3.
 Jason-is working on 4b, point 1 and I can help a bit with that too (working on keyboard logic). 
-Jessica- is doing 4b, point 2 for setup objects.
+Jessica- is doing 4b, point 2 for setup objects. knife and texture
+
+Jason -> object collision draw the stir
 
 -more details to come to the other 2 main scenes when we get there, focus on 4b for now. i am going to be as elaborate as possible on what we need for 4b. 4a and 4c are bonus if we have itme and finish 4b.
 
