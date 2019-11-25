@@ -34,31 +34,54 @@
   .show { transform: scaleY(1); height:200px; overflow:auto }
   .hide { transform: scaleY(0); height:0px; overflow:hidden  }
 </style>
+
+
+
+
+
 </head><body>       <!-- Begin typing the next of your web page here. //-->
+
+
+
+
+
 
 <div id="main-canvas" class="canvas-widget"></div>
 
 
 <!-- UI elements -->
 <div style="color:black; background-color: blue;  text-shadow: 1.5px 1.5px pink, -1.5px -1.5px pink; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:22px">
-  <div style="position: absolute; left: 800px; top:35px;"> Score: 
+  
+  <div style="position: absolute; left: 790px; top:35px; background-color:#B9DEED;"> Score: 
     <span id="score"></span>
   </div>
-  <div style="position: absolute; left: 800px; top:15px;">  <!--SCORE FIXED AT THE TOP -->
+
+  <div style="position: absolute; left: 790px; top:15px; background-color:#B9DEED;">  <!--SCORE FIXED AT THE TOP -->
     <span> TIME: </span>
     <span id="timer" style="height:30px;">
-
     </span>
-  </div>
+      </div>
+
+      <div style="position: absolute; left: 910px; top:15px; background-color:#B9DEED;">  <!--SCORE FIXED AT THE TOP -->
+    <span></span>
+    <span id="timeIMG" style="height:30px;">
+      
+    </span>
+</div>
+  <div style="position: absolute; left: 910px; top:15px; background-color:red;">  <!--SCORE FIXED AT THE TOP -->
+    <span></span>
+    <span id="deadtimeIMG" style="height:30px;">
+      
+    </span>
 </div>
 
 
 <div style="position: absolute; left: 265px; top:270px;color:white; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:45px"> <span id="gg"</span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
-  <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc1"</span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
+  <div style="position: absolute; left: 15px; top:90px; right: 660px; background-color:pink; color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:15px"> <span id="sc1"</span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
 
   <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc2"</span></div> <!--tHis is tagged as scene2 and when scene2, we can display stuff-->
 
-  <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc3"</span></div> <!--tHis is tagged as scene3 and when scene3, we can display stuff-->
+  <div style="position: absolute; left: 26px; top:20px; background-color:#B9DEED; color:black; text-shadow: 1px 1px black, -1px -1px black; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:22px"> <span id="sc3"</span></div> <!--tHis is tagged as scene3 and when scene3, we can display stuff-->
       <div style="position: absolute; left: 265px; top:270px; "><span id="sc3board" </span></div>
 
   <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc4"</span></div> <!--tHis is tagged as scene4 and when scene4, we can display stuff-->
@@ -85,10 +108,19 @@
 <script> "use strict"     // ********************* THE ENTRY POINT OF YOUR WHOLE PROGRAM STARTS HERE ********************* 
                                            // Use this code to embed a widget into any web page.  The widget inclues a 3D WebGL area
                                            // (an HTML canvas) and various panels of controls.
-  const scenes = [ "Assignment_Three_Scene" ];// First, list the names of scenes we will add to our canvas.  These will register themselves
+  const scenes = [ "Cooking_Mama" ];// First, list the names of scenes we will add to our canvas.  These will register themselves
                                            // with this widget's Canvas_Manager so that their code can be called upon every time a 
                                            // draw / keyboard / mouse event happens on the web page.
   new Canvas_Widget( "main-canvas", scenes );             // Use the Canvas_Widget class to display the WebGL demo.  Pass in
                                                           // the name of the HTML element we are to replace with the widget.
 </script>
 </body></html>
+
+
+
+ <!-- The following code embeds a code navigator widget with links to classes. //-->
+<div id="main-code" class="code-widget"></div>
+<script> "use strict"
+  new Code_Widget( "main-code", "Cooking_Mama" );
+</script>
+

@@ -7,8 +7,8 @@ var use_mipMap1=true;
 
 
 
-window.Assignment_Three_Scene = window.classes.Assignment_Three_Scene =
-class Assignment_Three_Scene extends Scene_Component
+window.Cooking_Mama = window.classes.Cooking_Mama =
+class Cooking_Mama extends Scene_Component
   { constructor( context, control_box )     // The scene begins by requesting the camera, shapes, and materials it will need.
       { super(   context, control_box );    // First, include a secondary Scene that provides movement controls:
         if( !context.globals.has_controls   ) 
@@ -20,13 +20,7 @@ class Assignment_Three_Scene extends Scene_Component
 
         const r = context.width/context.height;
         context.globals.graphics_state.projection_transform = Mat4.perspective( Math.PI/4, r, .1, 1000 );
-
-
-        this.texture = new Texture ( context.gl, "", false, false );        // Initial image source: Blank gif file
-        this.texture.image.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-        const shapes = { torus:  new Torus( 15, 15 ),
-                         torus2: new ( Torus.prototype.make_flat_shaded_version() )( 15, 15 ),
-
+        const shapes = { 
                          // Kitchen cutting scene materials
                          //cylinder: new Subdivision_Sphere(), // for the knife's handle.
                          //board: new Cube() //for the cutting board, and the knife
@@ -66,7 +60,16 @@ class Assignment_Three_Scene extends Scene_Component
              ambient: 1,
              texture: context.get_instance( "assets/cuttingboard.ico", use_mipMap2 )}
            ), 
-
+            phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
+            scene1mama:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
+             ambient: 1,
+             texture: context.get_instance( "assets/scene1background.ico", use_mipMap2 )}
+           ), 
+            phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
+            scene3back:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
+             ambient: 1,
+             texture: context.get_instance( "assets/scene3background.ico", use_mipMap2 )}
+           ), 
           };
 
 
@@ -77,6 +80,9 @@ class Assignment_Three_Scene extends Scene_Component
           //this is scene 1 location. we put it close to x=-100
           this.scene1location=Mat4.identity();
           this.scene1location=this.scene1location.times(Mat4.translation(Vec.of(-100,0,0)));
+          
+          this.scene1backimage=this.scene1location;
+          this.scene1backimage=this.scene1backimage.times(Mat4.scale(Vec.of(12,10,3)));
           //SCENE 1 OBJECTS BELOW
 
 
@@ -112,7 +118,13 @@ class Assignment_Three_Scene extends Scene_Component
 
 
           this.cuttingboard=Mat4.identity();
-          this.cuttingboard=this.cuttingboard.times(Mat4.scale(Vec.of(3,3,3)));
+          this.cuttingboard=this.cuttingboard.times(Mat4.translation(Vec.of(0,0,-3)));
+          this.cuttingboard=this.cuttingboard.times(Mat4.scale(Vec.of(8,3,1.5)));
+
+
+          this.scene3backimage=this.scene3location;
+          this.scene3backimage=this.scene3backimage.times(Mat4.translation(Vec.of(0,0,-13)));
+          this.scene3backimage=this.scene3backimage.times(Mat4.scale(Vec.of(30,21,6))); //behind everything else
 
 
           //END SCENE3
@@ -147,6 +159,8 @@ class Assignment_Three_Scene extends Scene_Component
           this.scene5=false;
           this.score=0; //cumulative score 
           this.time=0; //global timer
+
+          this.rank=0; //rank 0:F rank 1:D rank 2: C rank 3: B rank 4: A rank 5: S , so 6 ranks total
 
 
 
@@ -231,7 +245,7 @@ class Assignment_Three_Scene extends Scene_Component
             this.restart();
             this.restartflag=true; //starts the game for first time.
             this.attached=()=>this.scene1location;
-            this.scene1=!this.scene1;
+            this.scene1=true;
             if(this.scene1)
             {
               this.disableOtherScenes(1);  
@@ -306,7 +320,7 @@ class Assignment_Three_Scene extends Scene_Component
           {
             //MOVES THE KNIFE TO THE RIGHT, or ROTATE CW, or move basket to the right
           });
-        this.key_triggered_button( "Perform Cut", [ "," ], ()=> 
+        this.key_triggered_button( "Perform Cut", [ "i" ], ()=> 
           {
             //KNIFE SCENE ONLY, performs a cut. 
           });
@@ -315,7 +329,7 @@ class Assignment_Three_Scene extends Scene_Component
       drawscene1(graphics_state)
       { //food dropping scene!
 
-        this.shapes.cube.draw(graphics_state,this.scene1location,this.materials.test);
+        this.shapes.cube.draw(graphics_state,this.scene1backimage,this.materials.scene1mama);
 
         //needs to do object collision detection
 
@@ -346,6 +360,9 @@ class Assignment_Three_Scene extends Scene_Component
         //draw board
 
         this.shapes.cube.draw(graphics_state,this.cuttingboard,this.materials.cuttingboard);
+
+        this.shapes.cube.draw(graphics_state,this.scene3backimage,this.materials.scene3back);
+
 
         //needs to do object collision detection and splitting object 
 
@@ -418,6 +435,8 @@ class Assignment_Three_Scene extends Scene_Component
       {
             var score = document.getElementById("score");
             var time=document.getElementById("timer");
+            var timeImg=document.getElementById("timeIMG");
+            var deadclk=document.getElementById("deadtimeIMG");
             
 
             //this is dependent on which scene
@@ -429,14 +448,24 @@ class Assignment_Three_Scene extends Scene_Component
             if(this.scene2)
             {
                time.innerHTML=this.scene2time;
+               timeImg.innerHTML = '<img src="assets/timer.ico"> </img>'.repeat(this.scene2time/12+1);//so 5 times
+              deadclk.innerHTML = '<img src="assets/deadclock.ico"> </img>'.repeat(Math.max(0,1-this.scene2time));//so 1 times
+
             }
             if(this.scene3)
             {
                time.innerHTML=this.scene3time;
+
+                timeImg.innerHTML = '<img src="assets/timer.ico"> </img>'.repeat(this.scene3time/12+1);//so 5 times
+                deadclk.innerHTML = '<img src="assets/deadclock.ico"> </img>'.repeat(Math.max(0,1-this.scene3time));//so 1 times
+
             }
             if(this.scene4)
             {
                time.innerHTML=this.scene4time;
+               timeImg.innerHTML = '<img src="assets/timer.ico"> </img>'.repeat(this.scene4time/12+1);//so 5 times
+               deadclk.innerHTML = '<img src="assets/deadclock.ico"> </img>'.repeat(Math.max(0,1-this.scene4time));//so 1 times
+
             }
 
 
@@ -465,7 +494,7 @@ class Assignment_Three_Scene extends Scene_Component
             {
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc1.innerHTML="Default Reset Scene:";
+              sc1.innerHTML="Default Reset Scene: To play, press 2 to advance to next scene, and at the end of each scene, proceed by pressing the number corresponding to next scenes. To advance to next scenes, you must finish each scene before the game will allow you to advance!";
               this.drawscene1(graphics_state);
               this.disableOtherScenes(1);
             }
@@ -592,15 +621,31 @@ class Assignment_Three_Scene extends Scene_Component
 
 
         if (this.attached != undefined) {
-          var desired = this.attached().times(Mat4.translation([0,0,15]))
+          var desired = this.attached().times(Mat4.translation([1,1,15]))
           desired = Mat4.inverse(desired)
-          desired = desired.map( (x,i) => Vec.from( graphics_state.camera_transform[i] ).mix( x, .1 ) )
+          desired = desired.map( (x,i) => Vec.from( graphics_state.camera_transform[i] ).mix( x, .3 ) )
           graphics_state.camera_transform = desired;
         }
+
+
 
    
 
       }
+
+      //idk how to get this mother fucker to work.. or some form of help/text dialogue box...
+     show_explanation( document_element )
+    { document_element.innerHTML += `<p>This demo detects when some flying objects collide with one another, coloring them red when they do.  For a simpler demo that shows physics-based movement without objects that hit one another, see the demo called Inertia_Demo.
+                                     </p><p>Detecting intersections between pairs of stretched out, rotated volumes can be difficult, but is made easier by being in the right coordinate space.  The collision algorithm treats every shape like an ellipsoid roughly conforming to the drawn shape, and with the same transformation matrix applied.  Here these collision volumes are drawn in translucent purple alongside the real shape so that you can see them.
+                                     </p><p>This particular collision method is extremely short to code, as you can observe in the method \"check_if_colliding\" in the class called Body below.  It has problems, though.  Making every collision body a stretched sphere is a hack and doesn't handle the nuances of the actual shape being drawn, such as a cube's corners that stick out.  Looping through a list of discrete sphere points to see if the volumes intersect is *really* a hack (there are perfectly good analytic expressions that can test if two ellipsoids intersect without discretizing them into points, although they involve solving a high order polynomial).   On the other hand, for non-convex shapes a real collision method cannot be exact either, and is usually going to have to loop through a list of discrete tetrahedrons defining the shape anyway.
+                                     </p><p>This scene extends class Simulation, which carefully manages stepping simulation time for any scenes that subclass it.  It totally decouples the whole simulation from the frame rate, following the suggestions in the blog post <a href=\"https://gafferongames.com/post/fix_your_timestep/\" target=\"blank\">\"Fix Your Timestep\"</a> by Glenn Fielder.  Buttons allow you to speed up and slow down time to show that the simulation's answers do not change.</p>`;
+    }
+show_explanation( document_element )
+    { document_element.innerHTML += `<p>This demo detects when some flying objects collide with one another, coloring them red when they do.  For a simpler demo that shows physics-based movement without objects that hit one another, see the demo called Inertia_Demo.
+                                     </p><p>Detecting intersections between pairs of stretched out, rotated volumes can be difficult, but is made easier by being in the right coordinate space.  The collision algorithm treats every shape like an ellipsoid roughly conforming to the drawn shape, and with the same transformation matrix applied.  Here these collision volumes are drawn in translucent purple alongside the real shape so that you can see them.
+                                     </p><p>This particular collision method is extremely short to code, as you can observe in the method \"check_if_colliding\" in the class called Body below.  It has problems, though.  Making every collision body a stretched sphere is a hack and doesn't handle the nuances of the actual shape being drawn, such as a cube's corners that stick out.  Looping through a list of discrete sphere points to see if the volumes intersect is *really* a hack (there are perfectly good analytic expressions that can test if two ellipsoids intersect without discretizing them into points, although they involve solving a high order polynomial).   On the other hand, for non-convex shapes a real collision method cannot be exact either, and is usually going to have to loop through a list of discrete tetrahedrons defining the shape anyway.
+                                     </p><p>This scene extends class Simulation, which carefully manages stepping simulation time for any scenes that subclass it.  It totally decouples the whole simulation from the frame rate, following the suggestions in the blog post <a href=\"https://gafferongames.com/post/fix_your_timestep/\" target=\"blank\">\"Fix Your Timestep\"</a> by Glenn Fielder.  Buttons allow you to speed up and slow down time to show that the simulation's answers do not change.</p>`;
+    }
 
 
 
