@@ -29,6 +29,8 @@ class Assignment_Three_Scene extends Scene_Component
                        carrot:      new Shape_From_File( "assets/food/carrot.obj" ) ,
                        onion:      new Shape_From_File( "assets/food/onion.obj" ) ,
                        potato:      new Shape_From_File( "assets/food/potato.obj" ) ,
+                       blade:      new Shape_From_File( "assets/knife/blade.obj" ) ,
+                       handle:      new Shape_From_File( "assets/knife/handle.obj" ) ,
                        //allfood: new Shape_From_File("assets/food/foods.obj"),
                        }
         this.submit_shapes( context, shapes );
@@ -48,7 +50,8 @@ class Assignment_Three_Scene extends Scene_Component
            onion:        context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.4}),
            potato:       context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.3}) ,
            allfood:   context.get_instance(Phong_Shader).material(Color.of(0.3,0.3,0.3,1), {ambient:1}),
-
+           blade:   context.get_instance(Phong_Shader).material(Color.of(0.9,0.9,0.9,1), {ambient:1, diffusivity:1}),
+           handle:   context.get_instance(Phong_Shader).material(Color.of(0.4,0.9,0.9,1), {ambient:1})
           }
 
 
@@ -60,13 +63,24 @@ class Assignment_Three_Scene extends Scene_Component
           this.beef=this.beef.times(Mat4.translation(Vec.of(5,0,0)));
 
           this.carrot=Mat4.identity();
-          this.carrot=this.carrot.times(Mat4.translation(Vec.of(5,5,0))).times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
+          this.carrot=this.carrot.times(Mat4.translation(Vec.of(0,5,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
 
           this.onion=Mat4.identity();
           this.onion=this.onion.times(Mat4.translation(Vec.of(0,0,0)))
 
           this.potato=Mat4.identity();
-          this.potato = this.onion.times(Mat4.translation(Vec.of(-5,0,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
+          this.potato = this.potato.times(Mat4.translation(Vec.of(-5,0,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
+          this.potato = this.potato.times(Mat4.rotation(-Math.PI/2,Vec.of(0,0,1)));
+
+          this.blade=Mat4.identity(); 
+
+          this.handle = Mat4.identity();
+          this.handle = this.blade.times(Mat4.translation(Vec.of(0.014,-3.25,0.1)));
+
+          this.knifematrix = Mat4.identity().times(Mat4.translation(Vec.of(2,0,0)));
+          this.blade = this.blade.times(this.knifematrix)
+          this.handle = this.handle.times(this.knifematrix)
+
 
         this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
       }
@@ -91,6 +105,8 @@ class Assignment_Three_Scene extends Scene_Component
         this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.carrot);
         this.shapes.onion.draw(graphics_state,this.onion,this.materials.onion);
         this.shapes.potato.draw(graphics_state,this.potato,this.materials.potato);
+        this.shapes.blade.draw(graphics_state,this.blade,this.materials.blade);
+        this.shapes.handle.draw(graphics_state,this.handle,this.materials.handle);
 
         //this.shapes.allfood.draw(graphics_state,this.allfood,this.materials.allfood);
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 2 and 3)
