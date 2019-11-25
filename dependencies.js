@@ -458,6 +458,9 @@ class Movement_Controls extends Scene_Component    // Movement_Controls is a Sce
       canvas  .addEventListener( "mouseout",  e => { if( !this.mouse.anchor ) this.mouse.from_center.scale(0) } );  
     }
   show_explanation( document_element ) { }
+ 
+//LINE 464 CHANGES CONTROL PANEL MAYBE USEFUL OR STUFF TO CONSIDER!!!
+
   make_control_panel()                                                        // This function of a scene sets up its keyboard shortcuts.
     { const globals = this.globals;
       this.control_panel.innerHTML += "Click and drag the scene to <br> spin your viewpoint around it.<br>";

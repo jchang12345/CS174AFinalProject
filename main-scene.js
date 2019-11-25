@@ -5,6 +5,14 @@ var use_mipMap2=false;
 var use_mipMap1=true;
 
 
+var knifeXloc=5;
+var knifeYloc=0;
+var knifeZloc=3;
+
+
+
+var beef_color_def=0.4;
+
 
 
 window.Cooking_Mama = window.classes.Cooking_Mama =
@@ -30,7 +38,8 @@ class Cooking_Mama extends Scene_Component
                        onion:      new Shape_From_File( "assets/food/onion.obj" ) ,
                        potato:      new Shape_From_File( "assets/food/potato.obj" ) ,
 
-
+                       blade:      new Shape_From_File( "assets/knife/blade.obj" ) ,
+                       handle:      new Shape_From_File( "assets/knife/handle.obj" ) ,
 
 
 
@@ -38,6 +47,9 @@ class Cooking_Mama extends Scene_Component
                        //allfood: new Shape_From_File("assets/food/foods.obj"),
                        }
         this.submit_shapes( context, shapes );
+
+
+
                               
                                      // Make some Material objects available to you:
         this.materials =
@@ -46,10 +58,15 @@ class Cooking_Mama extends Scene_Component
                                 // TODO:  Fill in as many additional material objects as needed in this key/value table.
                                 //        (Requirement 1)
            
+            blade:   context.get_instance(Phong_Shader).material(Color.of(0.9,0.9,0.9,1), {ambient:1, diffusivity:1}),
+           handle:   context.get_instance(Phong_Shader).material(Color.of(0.4,0.9,0.9,1), {ambient:1}),
 
 
+          beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,beef_color_def,1), {ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
+           
+          h_beef:      context.get_instance(Phong_Shader).material(Color.of(0.5,0,0,1), {ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
 
-          beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,.4,1), {ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
+
            carrot:        context.get_instance(Phong_Shader).material(Color.of(.4,0,0,1), {ambient:0.3}) ,
            onion:        context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.4}),
            potato:       context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.3}) ,
@@ -117,6 +134,10 @@ class Cooking_Mama extends Scene_Component
           this.potato =this.potato.times(Mat4.translation(Vec.of(-5,0,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
 
 
+
+
+
+
           this.cuttingboard=Mat4.identity();
           this.cuttingboard=this.cuttingboard.times(Mat4.translation(Vec.of(0,0,-3)));
           this.cuttingboard=this.cuttingboard.times(Mat4.scale(Vec.of(8,3,1.5)));
@@ -169,6 +190,9 @@ class Cooking_Mama extends Scene_Component
           this.scene2time=0;
           this.scene3time=0;
           this.scene4time=0;
+
+          //cut timer
+          this.scene3cuttime=0;
 
           //prev scene states necessary
           this.prevscene=0; //this is a value from scene 1->4
@@ -309,22 +333,78 @@ class Cooking_Mama extends Scene_Component
 
         this.new_line();
 
-        this.key_triggered_button( "Move Left", [ "l" ], ()=> 
+        this.key_triggered_button( "Move Left", [ "g" ], ()=> 
           {
 
             //MOVES THE KNIFE TO THE LEFT, or ROTATE CCW, or move basket to the left
-
-         
+            if(knifeXloc>0 &&this.scene3)
+            {
+              knifeXloc=knifeXloc-1;
+            }
           }); 
-        this.key_triggered_button( "Move Right", [ "k" ], ()=> 
+        this.key_triggered_button( "Move Right", [ "j" ], ()=> 
           {
             //MOVES THE KNIFE TO THE RIGHT, or ROTATE CW, or move basket to the right
+            if(knifeXloc<9 &&this.scene3)
+            {
+              knifeXloc=knifeXloc+1;
+            }
           });
-        this.key_triggered_button( "Perform Cut", [ "i" ], ()=> 
+        this.key_triggered_button( "Perform Cut", [ "h" ], ()=> 
           {
             //KNIFE SCENE ONLY, performs a cut. 
-          });
+            if(knifeZloc>0 &&this.scene3)
+            {
 
+            knifeZloc=knifeZloc-3;
+            }            //timer.start();
+            //setTimeout(timer.stop(),1000);
+            //knifeZloc=knifeZloc+3;
+          });
+        this.key_triggered_button("Pull cut back", ["y"],()=>
+        {
+          if(knifeZloc<6 &&this.scene3)
+          {
+            knifeZloc=knifeZloc+3;        
+          } 
+        }
+        );
+
+      }
+      check_collision(graphics_state,t)
+      {
+
+
+
+        if(knifeZloc>0)
+        {
+          this.stop3cuttime=t;
+          //draw scene normally
+          this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef); //camera this.attach can only stick onto like this.beef...
+        }
+        else if(knifeZloc==0)
+        {
+          //collision so indicate it
+          beef_color_def=1;
+          //count 3 seconds
+          //this.scene3cuttime=this.stop3cuttime;
+          
+            //wait 3 second
+            if(this.scene3cuttime<this.stop3cuttime+1)
+            {
+              this.scene3cuttime=t;
+              this.shapes.beef.draw(graphics_state,this.beef,this.materials.h_beef);//;({color: Color.of( .5,0,0, 1 ));
+              //also can animate or change something aside from changing score.
+            }
+          else
+          {
+          this.score=this.score+500; //base score increase
+          this.scene3cuttime=t;
+          knifeZloc=knifeZloc+3; //pull it back up for them
+          beef_color_def=0.3;
+
+          }
+        }
       }
       drawscene1(graphics_state)
       { //food dropping scene!
@@ -349,13 +429,29 @@ class Cooking_Mama extends Scene_Component
         //score accumulation logic
       }
 
-      drawscene3(graphics_state)
+      drawscene3(graphics_state,t)
       {
         //food cutting scene!
-        this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef); //camera this.attach can only stick onto like this.beef...
         this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.carrot);
         this.shapes.onion.draw(graphics_state,this.onion,this.materials.onion);
         this.shapes.potato.draw(graphics_state,this.potato,this.materials.potato);
+
+
+
+        //NEEDS TO UPDATE POSITIONS else it wont know i am moving....
+
+          this.blade=Mat4.identity(); 
+
+          this.handle = Mat4.identity();
+          this.handle = this.blade.times(Mat4.translation(Vec.of(0.014,-3.25,0.1)));
+
+          this.knifematrix = Mat4.identity().times(Mat4.translation(Vec.of(knifeXloc,knifeYloc,knifeZloc)));
+          this.blade = this.blade.times(this.knifematrix)
+          this.handle = this.handle.times(this.knifematrix)
+
+//draw knife
+        this.shapes.blade.draw(graphics_state,this.blade,this.materials.blade);
+        this.shapes.handle.draw(graphics_state,this.handle,this.materials.handle);
 
         //draw board
 
@@ -365,6 +461,10 @@ class Cooking_Mama extends Scene_Component
 
 
         //needs to do object collision detection and splitting object 
+        this.check_collision(graphics_state,t);
+
+
+        //split the damage done by the split and display new chopped up objects
 
         //score accumulation logic
 
@@ -431,7 +531,7 @@ class Cooking_Mama extends Scene_Component
       }
       
 //displays UI for score
-      UI(graphics_state)
+      UI(graphics_state, t)
       {
             var score = document.getElementById("score");
             var time=document.getElementById("timer");
@@ -511,7 +611,7 @@ class Cooking_Mama extends Scene_Component
             {
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc2.innerHTML="Food Dropping Scene Tutorial:";
+              sc2.innerHTML="Food Dropping Scene:";
               this.drawscene2(graphics_state);
               this.disableOtherScenes(2);
             }
@@ -525,9 +625,9 @@ class Cooking_Mama extends Scene_Component
             {
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc3.innerHTML="Food Cutting Scene Tutorial:";
+              sc3.innerHTML="Food Cutting Scene:";
               //sc3board.innerHTML="<img src='/assets/cuttingboard.jpg' width='400' height='150'>";
-              this.drawscene3(graphics_state);
+              this.drawscene3(graphics_state,t);
               this.disableOtherScenes(3);
             }
             else if(!this.scene3)
@@ -541,7 +641,7 @@ class Cooking_Mama extends Scene_Component
             {
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc4.innerHTML="Food Mixing Scene Tutorial:";
+              sc4.innerHTML="Food Mixing Scene:";
               this.drawscene4(graphics_state);
               this.disableOtherScenes(4);
             }
@@ -613,7 +713,7 @@ class Cooking_Mama extends Scene_Component
         //planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.5*t, Vec.of(0,1,0)))
  
        
-        this.UI(graphics_state);
+        this.UI(graphics_state,t);
          ///start counting time
 
         this.startTime(t);
@@ -621,7 +721,7 @@ class Cooking_Mama extends Scene_Component
 
 
         if (this.attached != undefined) {
-          var desired = this.attached().times(Mat4.translation([1,1,15]))
+          var desired = this.attached().times(Mat4.translation([0,0.1,15]))
           desired = Mat4.inverse(desired)
           desired = desired.map( (x,i) => Vec.from( graphics_state.camera_transform[i] ).mix( x, .3 ) )
           graphics_state.camera_transform = desired;
@@ -636,14 +736,10 @@ class Cooking_Mama extends Scene_Component
       //idk how to get this mother fucker to work.. or some form of help/text dialogue box...
      show_explanation( document_element )
     { document_element.innerHTML += `<p>This demo detects when some flying objects collide with one another, coloring them red when they do.  For a simpler demo that shows physics-based movement without objects that hit one another, see the demo called Inertia_Demo.
-                                     </p><p>Detecting intersections between pairs of stretched out, rotated volumes can be difficult, but is made easier by being in the right coordinate space.  The collision algorithm treats every shape like an ellipsoid roughly conforming to the drawn shape, and with the same transformation matrix applied.  Here these collision volumes are drawn in translucent purple alongside the real shape so that you can see them.
-                                     </p><p>This particular collision method is extremely short to code, as you can observe in the method \"check_if_colliding\" in the class called Body below.  It has problems, though.  Making every collision body a stretched sphere is a hack and doesn't handle the nuances of the actual shape being drawn, such as a cube's corners that stick out.  Looping through a list of discrete sphere points to see if the volumes intersect is *really* a hack (there are perfectly good analytic expressions that can test if two ellipsoids intersect without discretizing them into points, although they involve solving a high order polynomial).   On the other hand, for non-convex shapes a real collision method cannot be exact either, and is usually going to have to loop through a list of discrete tetrahedrons defining the shape anyway.
                                      </p><p>This scene extends class Simulation, which carefully manages stepping simulation time for any scenes that subclass it.  It totally decouples the whole simulation from the frame rate, following the suggestions in the blog post <a href=\"https://gafferongames.com/post/fix_your_timestep/\" target=\"blank\">\"Fix Your Timestep\"</a> by Glenn Fielder.  Buttons allow you to speed up and slow down time to show that the simulation's answers do not change.</p>`;
     }
 show_explanation( document_element )
     { document_element.innerHTML += `<p>This demo detects when some flying objects collide with one another, coloring them red when they do.  For a simpler demo that shows physics-based movement without objects that hit one another, see the demo called Inertia_Demo.
-                                     </p><p>Detecting intersections between pairs of stretched out, rotated volumes can be difficult, but is made easier by being in the right coordinate space.  The collision algorithm treats every shape like an ellipsoid roughly conforming to the drawn shape, and with the same transformation matrix applied.  Here these collision volumes are drawn in translucent purple alongside the real shape so that you can see them.
-                                     </p><p>This particular collision method is extremely short to code, as you can observe in the method \"check_if_colliding\" in the class called Body below.  It has problems, though.  Making every collision body a stretched sphere is a hack and doesn't handle the nuances of the actual shape being drawn, such as a cube's corners that stick out.  Looping through a list of discrete sphere points to see if the volumes intersect is *really* a hack (there are perfectly good analytic expressions that can test if two ellipsoids intersect without discretizing them into points, although they involve solving a high order polynomial).   On the other hand, for non-convex shapes a real collision method cannot be exact either, and is usually going to have to loop through a list of discrete tetrahedrons defining the shape anyway.
                                      </p><p>This scene extends class Simulation, which carefully manages stepping simulation time for any scenes that subclass it.  It totally decouples the whole simulation from the frame rate, following the suggestions in the blog post <a href=\"https://gafferongames.com/post/fix_your_timestep/\" target=\"blank\">\"Fix Your Timestep\"</a> by Glenn Fielder.  Buttons allow you to speed up and slow down time to show that the simulation's answers do not change.</p>`;
     }
 
