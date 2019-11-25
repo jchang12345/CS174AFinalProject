@@ -95,25 +95,42 @@ class Assignment_Three_Scene extends Scene_Component
         this.key_triggered_button( "(Scene 2) Food Drop Scene", [ "2" ], ()=> 
           {
             //this.scene2=!this.scene2;
-            this.disableOtherScenes(2);
+            this.scene2=!this.scene2;
+            if(this.scene2)
+            {
+              this.disableOtherScenes(2);
+            }
           });
         this.key_triggered_button( "(Scene 3) Food Cutting Scene",  [ "3" ], () => 
           {
             //this.scene3=!this.scene3;
-                        this.disableOtherScenes(3);
+            this.scene3=!this.scene3;
+            if(this.scene3) //and if conditions are met to transition flag 
+            {
+              this.disableOtherScenes(3);
+            }
+                        //this.disableOtherScenes(3);
 
           } );
         this.new_line();
         this.key_triggered_button( "(Score 4) Food Mixing Scene", [ "4" ], () => 
           {
             //this.scene4=!this.scene4;
-                        this.disableOtherScenes(4);
+              this.scene4=!this.scene4;
+            if(this.scene4)
+            {
+              this.disableOtherScenes(4);
+            }
 
           } ); this.new_line();
         this.key_triggered_button( "(Scene 5) Finished Product Scene", [ "5" ], () => 
           {
          //   this.scene5=!this.scene5;
-                        this.disableOtherScenes(5);
+                        this.scene5=!this.scene5;
+            if(this.scene5)
+            {
+              this.disableOtherScenes(5);
+            }
 
           } );
       }
