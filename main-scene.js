@@ -4,6 +4,9 @@
 var use_mipMap2=false;
 var use_mipMap1=true;
 
+
+
+
 window.Assignment_Three_Scene = window.classes.Assignment_Three_Scene =
 class Assignment_Three_Scene extends Scene_Component
   { constructor( context, control_box )     // The scene begins by requesting the camera, shapes, and materials it will need.
@@ -18,6 +21,9 @@ class Assignment_Three_Scene extends Scene_Component
         const r = context.width/context.height;
         context.globals.graphics_state.projection_transform = Mat4.perspective( Math.PI/4, r, .1, 1000 );
 
+
+        this.texture = new Texture ( context.gl, "", false, false );        // Initial image source: Blank gif file
+        this.texture.image.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         const shapes = { torus:  new Torus( 15, 15 ),
                          torus2: new ( Torus.prototype.make_flat_shaded_version() )( 15, 15 ),
 
@@ -29,6 +35,12 @@ class Assignment_Three_Scene extends Scene_Component
                        carrot:      new Shape_From_File( "assets/food/carrot.obj" ) ,
                        onion:      new Shape_From_File( "assets/food/onion.obj" ) ,
                        potato:      new Shape_From_File( "assets/food/potato.obj" ) ,
+
+
+
+
+
+                       cube: new Cube_1(),
                        //allfood: new Shape_From_File("assets/food/foods.obj"),
                        }
         this.submit_shapes( context, shapes );
@@ -48,9 +60,43 @@ class Assignment_Three_Scene extends Scene_Component
            onion:        context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.4}),
            potato:       context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.3}) ,
            allfood:   context.get_instance(Phong_Shader).material(Color.of(0.3,0.3,0.3,1), {ambient:1}),
-          }
+
+            phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
+            cuttingboard:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
+             ambient: 1,
+             texture: context.get_instance( "assets/cuttingboard.ico", use_mipMap2 )}
+           ), 
+
+          };
 
 
+
+//          this.scene6location=Mat4.identity();
+ //         this.scene6location=this.scene6location.times(Mat4.translation(Vec.of(-1000,-1000,0)));
+/*ALLLL SCENE  and OBJECT LOCATIONS HERE*/
+          //this is scene 1 location. we put it close to x=-100
+          this.scene1location=Mat4.identity();
+          this.scene1location=this.scene1location.times(Mat4.translation(Vec.of(-100,0,0)));
+          //SCENE 1 OBJECTS BELOW
+
+
+
+          //END SCENE1
+
+                    //this is scene 2 location. we put it at x=100 y=100
+          this.scene2location=Mat4.identity();
+          this.scene2location=this.scene2location.times(Mat4.translation(Vec.of(100,100,0)));
+                    //SCENE 2 OBJECTS BELOW
+
+
+
+          //END SCENE2
+
+          //this is scene 3 location. we put it close to origin for now
+          this.scene3location=Mat4.identity();
+          this.scene3location=this.scene3location.times(Mat4.translation(Vec.of(0,0,0)));
+
+          //SCENE 3 OBJECTS BELOW
 
           this.beef=Mat4.identity();
           this.beef=this.beef.times(Mat4.translation(Vec.of(5,0,0)));
@@ -64,16 +110,54 @@ class Assignment_Three_Scene extends Scene_Component
           this.potato=Mat4.identity();
           this.potato =this.potato.times(Mat4.translation(Vec.of(-5,0,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
 
+
+          this.cuttingboard=Mat4.identity();
+          this.cuttingboard=this.cuttingboard.times(Mat4.scale(Vec.of(3,3,3)));
+
+
+          //END SCENE3
+
+          //scene 4 location somewhere in x=100
+
+          this.scene4location=Mat4.identity();
+          this.scene4location=this.scene4location.times(Mat4.translation(Vec.of(100,0,0)));
+//SCENE 4 OBJECTS BELOW
+
+
+
+          //END SCENE4
+
+                    //scene 5 location somewhere in x=100
+
+          this.scene5location=Mat4.identity();
+          this.scene5location=this.scene5location.times(Mat4.translation(Vec.of(-100,-100,0)));
+//SCENE 5 OBJECTS BELOW
+
+
+
+          //END SCENE5
+
           //game mechanics
           this.restartflag=false;
           this.finished=false;
           this.startgame=false; //starts off at start scene until button push 1 to begin game, transition this to true to indicate we started
-          this.scene2=false; //food drop scene
-          this.scene3=false; //cutting scene
-          this.scene4=false; // mixing scene
+          this.scene2=false; //food drop scene flag
+          this.scene3=false; //cutting scene flag
+          this.scene4=false; // mixing scene flag
           this.scene5=false;
           this.score=0; //cumulative score 
-          this.time=0; //time they have to perform a task.
+          this.time=0; //global timer
+
+
+
+
+          //scene timers:
+          this.scene2time=0;
+          this.scene3time=0;
+          this.scene4time=0;
+
+          //prev scene states necessary
+          this.prevscene=0; //this is a value from scene 1->4
 
           //finished scene mechanics
           this.finishedscene2=false;
@@ -85,26 +169,95 @@ class Assignment_Three_Scene extends Scene_Component
 
         this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
       }
+      startTime(t) //for each scene this is the timer. score should be adjusted at the end based on how well each task was performed
+      {
+        if(!this.scene2 &&!this.scene3 &&!this.scene4)
+        {
+          this.time=60-Math.trunc(t);//truncate to int
+          this.prevscene=1;
+        }
+
+        if(this.scene2)
+        {
+                 if(this.prevscene!=2)
+          {
+            this.time=Math.trunc(t);
+            this.prevscene=2;
+          } 
+          this.scene2time=60-Math.trunc(t-this.time); //should do something like turn it red when times up!
+          if(this.scene2time<=0)
+          {
+            this.scene2time=0;
+          }
+        }
+
+                if(this.scene3)
+        {
+                  if(this.prevscene!=3)
+          {
+            this.time=Math.trunc(t);
+            this.prevscene=3;
+          }
+          this.scene3time=60-Math.trunc(t-this.time);
+                    if(this.scene3time<=0)
+          {
+            this.scene3time=0;
+          }
+        }
+                if(this.scene4)
+        {
+                 if(this.prevscene!=4)
+          {
+            this.time=Math.trunc(t);
+            this.prevscene=4;
+          }
+          this.scene4time=60-Math.trunc(t-this.time);
+                    if(this.scene4time<=0)
+          {
+            this.scene4time=0;
+          }
+
+        }
+
+      }
+       calculatescore()
+        {
+          //TODO: score calculations
+        }
     make_control_panel()            // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
       { 
         this.key_triggered_button( "Start Game/Restart",     [ "1" ], () => 
           {
             this.restart();
-            this.disableOtherScenes(1);  
+            this.restartflag=true; //starts the game for first time.
+            this.attached=()=>this.scene1location;
+            this.scene1=!this.scene1;
+            if(this.scene1)
+            {
+              this.disableOtherScenes(1);  
+            }
           }  );
         this.key_triggered_button( "(Scene 2) Food Drop Scene", [ "2" ], ()=> 
           {
             //this.scene2=!this.scene2;
             this.scene2=!this.scene2;
+            this.attached = () => this.scene2location;
+           // this.time=Math.trunc(t);//truncate to int
+
             if(this.scene2)
             {
               this.disableOtherScenes(2);
             }
           });
+
+
         this.key_triggered_button( "(Scene 3) Food Cutting Scene",  [ "3" ], () => 
           {
             //this.scene3=!this.scene3;
             this.scene3=!this.scene3;
+           // this.time=Math.trunc(t);//truncate to int
+            this.attached = () => this.scene3location;
+
             if(this.scene3) //and if conditions are met to transition flag 
             {
               this.disableOtherScenes(3);
@@ -117,6 +270,10 @@ class Assignment_Three_Scene extends Scene_Component
           {
             //this.scene4=!this.scene4;
               this.scene4=!this.scene4;
+                          this.attached = () => this.scene4location;
+
+            //  this.time=Math.trunc(t);//truncate to int
+
             if(this.scene4)
             {
               this.disableOtherScenes(4);
@@ -127,17 +284,49 @@ class Assignment_Three_Scene extends Scene_Component
           {
          //   this.scene5=!this.scene5;
                         this.scene5=!this.scene5;
+                                    this.attached = () => this.scene5location;
+
             if(this.scene5)
             {
               this.disableOtherScenes(5);
             }
 
           } );
+
+        this.new_line();
+
+        this.key_triggered_button( "Move Left", [ "l" ], ()=> 
+          {
+
+            //MOVES THE KNIFE TO THE LEFT, or ROTATE CCW, or move basket to the left
+
+         
+          }); 
+        this.key_triggered_button( "Move Right", [ "k" ], ()=> 
+          {
+            //MOVES THE KNIFE TO THE RIGHT, or ROTATE CW, or move basket to the right
+          });
+        this.key_triggered_button( "Perform Cut", [ "," ], ()=> 
+          {
+            //KNIFE SCENE ONLY, performs a cut. 
+          });
+
       }
-      drawscene2()
+      drawscene1(graphics_state)
       { //food dropping scene!
 
+        this.shapes.cube.draw(graphics_state,this.scene1location,this.materials.test);
 
+        //needs to do object collision detection
+
+        //shadow
+
+        //score accumulation logic
+      }
+      drawscene2(graphics_state)
+      { //food dropping scene!
+
+        this.shapes.cube.draw(graphics_state,this.scene2location,this.materials.test);
 
         //needs to do object collision detection
 
@@ -149,14 +338,14 @@ class Assignment_Three_Scene extends Scene_Component
       drawscene3(graphics_state)
       {
         //food cutting scene!
-        this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef);
+        this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef); //camera this.attach can only stick onto like this.beef...
         this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.carrot);
         this.shapes.onion.draw(graphics_state,this.onion,this.materials.onion);
         this.shapes.potato.draw(graphics_state,this.potato,this.materials.potato);
 
         //draw board
 
-
+        this.shapes.cube.draw(graphics_state,this.cuttingboard,this.materials.cuttingboard);
 
         //needs to do object collision detection and splitting object 
 
@@ -164,16 +353,19 @@ class Assignment_Three_Scene extends Scene_Component
 
       }
 
-      drawscene4()
+      drawscene4(graphics_state)
       {
         //food mixing scene!
+        this.shapes.cube.draw(graphics_state,this.scene4location,this.materials.test);
 
         //needs to give instruction and score accumulation
       }
 
-      drawscene5()
+      drawscene5(graphics_state)
       {
         //food final presentation scene!
+        this.shapes.cube.draw(graphics_state,this.scene5location,this.materials.test);
+
       }
 
 
@@ -226,10 +418,32 @@ class Assignment_Three_Scene extends Scene_Component
       {
             var score = document.getElementById("score");
             var time=document.getElementById("timer");
-            time.innerHTML=this.time;
+            
+
+            //this is dependent on which scene
+            if(this.scene1)
+            {
+               //time.innerHTML=this.time;
+               time.innerHTML=0;
+            }
+            if(this.scene2)
+            {
+               time.innerHTML=this.scene2time;
+            }
+            if(this.scene3)
+            {
+               time.innerHTML=this.scene3time;
+            }
+            if(this.scene4)
+            {
+               time.innerHTML=this.scene4time;
+            }
+
+
             score.innerHTML = this.score;
             //score.innerHTML = this.score;
             var finished = document.getElementById("gg");
+            var sc1=document.getElementById("sc1");
             var sc2=document.getElementById("sc2");
             var sc3=document.getElementById("sc3");
             var sc3board=document.getElementById("sc3board");
@@ -247,12 +461,29 @@ class Assignment_Three_Scene extends Scene_Component
             {
                   gg.innerHTML = "";
             }
+            if(this.scene1)
+            {
+              //TODO:
+              //set some tiemr so we know to display the "tutorial" for this scene
+              sc1.innerHTML="Default Reset Scene:";
+              this.drawscene1(graphics_state);
+              this.disableOtherScenes(1);
+            }
+            else if(!this.scene1)
+            {
+              sc1.innerHTML=""
+            }
 
+            else if(!this.scene2)
+            {
+              sc2.innerHTML="";
+            }
             if(this.scene2)
             {
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               sc2.innerHTML="Food Dropping Scene Tutorial:";
+              this.drawscene2(graphics_state);
               this.disableOtherScenes(2);
             }
 
@@ -266,7 +497,7 @@ class Assignment_Three_Scene extends Scene_Component
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               sc3.innerHTML="Food Cutting Scene Tutorial:";
-              sc3board.innerHTML="<img src='/assets/cuttingboard.jpg' width='400' height='150'>";
+              //sc3board.innerHTML="<img src='/assets/cuttingboard.jpg' width='400' height='150'>";
               this.drawscene3(graphics_state);
               this.disableOtherScenes(3);
             }
@@ -282,6 +513,7 @@ class Assignment_Three_Scene extends Scene_Component
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               sc4.innerHTML="Food Mixing Scene Tutorial:";
+              this.drawscene4(graphics_state);
               this.disableOtherScenes(4);
             }
 
@@ -295,6 +527,7 @@ class Assignment_Three_Scene extends Scene_Component
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               sc5.innerHTML="Finished Product!";
+              this.drawscene5(graphics_state);             
               this.disableOtherScenes(5);
             }
             else if(!this.scene5)
@@ -351,14 +584,21 @@ class Assignment_Three_Scene extends Scene_Component
         //planet_1_matrix = planet_1_matrix.times(Mat4.rotation(0.5*t, Vec.of(0,1,0)))
  
        
+        this.UI(graphics_state);
+         ///start counting time
+
+        this.startTime(t);
+
+
+
         if (this.attached != undefined) {
-          var desired = this.attached().times(Mat4.translation([0,0,5]))
+          var desired = this.attached().times(Mat4.translation([0,0,15]))
           desired = Mat4.inverse(desired)
           desired = desired.map( (x,i) => Vec.from( graphics_state.camera_transform[i] ).mix( x, .1 ) )
           graphics_state.camera_transform = desired;
         }
 
-        this.UI(graphics_state);
+   
 
       }
 
