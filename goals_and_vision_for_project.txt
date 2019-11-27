@@ -1,0 +1,38 @@
+
+Work Delegation:
+
+Justin-2,3(I want to work on this at least boilerplating it at least for step 2 and step 3, you guys can add to it whenever i finish and ill try to finish this fast enough so u guys have time to look at it. I should be finish with this stuff probably by saturday latest. this is 2 and 3 on task list, once again) 
+
+Justin-In 4b, I'll focus on point 3 and maybe 4 after 3.
+Jason-is working on 4b, point 1 and I can help a bit with that too (working on keyboard logic). 
+Jessica- is doing 4b, point 2 for setup objects. knife and texture
+
+Jason -> object collision draw the stir
+
+-more details to come to the other 2 main scenes when we get there, focus on 4b for now. i am going to be as elaborate as possible on what we need for 4b. 4a and 4c are bonus if we have itme and finish 4b.
+
+
+
+TASK LIST:
+1. audio/background images (for fun, if extra time)
+
+2. general UI (adding functionality for slicing in slicing scene, mixing in a direction or another direction in mixing scene, movement in food drop scene, and tallying up score / setup logic for that.)
+
+3. Start off normal scene of just describing the game /rules for game 
+
+4. after that, have them navigate to the first scene (dropping food scene.) I can see that there will be 
+4a)object collision detection (easy , if food drops into a basket of sorts it counts, we will drop multiple objects and they will get score based on which object they collect first. I can easily see some shadow when its dropping, we can add some rotation to show off the 3d objects jessica drew, apply some kinda texture mapping or something too, etc.) when all ingredient drops are done and acquire, move to next scene
+4b)cutting scene:
+ 1. calculate slice and properly split the object (knife is a plane, and we rotate the plane/knife using keyboard controls)
+ 2. setup the objects so they are nicely lined up in the scene and board
+ 3. setup score so that when sliced at good location, they get more score than if they sliced it poorly/bad angles 
+ 4. when finished with cutting everything, they need to be able to move onto next scene/get some output informing them they have finished.
+ (object collision detection splitting the cutted up images to sliced stuff basically.) <---THIS IS MAIN SCENE WE ARE FOCUSING ON GETTING DONE FIRST RIGHT NOW.
+4c)mixing the sliced ingredients scene. they just need to press to stir. 
+
+5. total score at end of it!
+
+
+
+
+https://www.youtube.com/watch?v=gGVIgJF-wM8

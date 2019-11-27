@@ -624,3 +624,209 @@ class Canvas_Widget                    // Canvas_Widget embeds a WebGL demo onto
       this.canvas_manager.render();   // Start WebGL initialization.  Note that render() will re-queue itself for more calls.
     }
 }
+
+
+
+
+
+window.Code_Widget = window.tiny_graphics.Code_Widget =
+class Code_Widget
+{ constructor( element, selected_class )
+    { let rules = [ ".code-widget .code-panel { background:white; overflow:auto; font-family:monospace; width:1060px; padding:10px; padding-bottom:40px; max-height: 500px; \
+                                                  border-radius:12px; box-shadow: 20px 20px 90px 0px powderblue inset, 5px 5px 30px 0px blue inset }",
+                ".code-widget .code-display { min-width:1800px; padding:10px; white-space:pre-wrap; background:transparent }",
+                ".code-widget .edit-button { left:800px; z-index:2; position:absolute; outline:0; height:80px; width:80px; border-radius:50% }",
+                ".code-widget table { display:block; overflow-x:auto; width:1080px; border-radius:25px; border-collapse:collapse; border: 2px solid black }",
+               ".code-widget table.class-list td { border-width:thin; background: #EEEEEE; padding:12px; font-family:monospace; border: 1px solid black }"
+                 ];
+
+//editor widget rules, change to code widget rules
+/*{ let rules = [ ".editor-widget { margin:auto; background:white; overflow:auto; font-family:monospace; width:1060px; padding:10px; \
+                                      border-radius:12px; box-shadow: 20px 20px 90px 0px powderblue inset, 5px 5px 30px 0px blue inset }",
+                    ".editor-widget button { background: #4C9F50; color: white; padding: 6px; border-radius:9px; margin-right:5px; \
+                                             box-shadow: 4px 6px 16px 0px rgba(0,0,0,0.3); transition: background .3s, transform .3s }",
+                    ".editor-widget input { margin-right:5px }",
+                    ".editor-widget textarea { white-space:pre; width:1040px; margin-bottom:30px }",
+                    ".editor-widget button:hover, button:focus { transform: scale(1.3); color:gold }"
+                  ];
+
+      for( const r of rules ) document.styleSheets[0].insertRule( r, 1 );
+
+      this.associated_canvas = canvas_widget;
+      this.options = options;
+*/
+      for( const r of rules ) document.styleSheets[0].insertRule( r, 1 );
+      
+
+     // if( !window[ selected_class ] ) throw "Class not found.";
+     // selected_class = window[ selected_class ];
+        
+     //this is from build_reader
+     /*  build_reader( element, main_scene, additional_scenes, definitions )
+    {                                           // (Internal helper function)      
+      this.definitions = definitions;
+      const code_panel = element.appendChild( document.createElement( "div" ) );
+      code_panel.className = "code-panel";
+//       const text        = code_panel.appendChild( document.createElement( "p" ) );
+//       text.textContent  = "Code for the above scene:";
+      this.code_display = code_panel.appendChild( document.createElement( "div" ) );
+      this.code_display.className = "code-display";
+                                                                            // Default textbox contents:
+      this.display_code( main_scene );
+    }
+     */
+      element = document.querySelector( "#" + element );
+      const code_panel = element.appendChild( document.createElement( "div" ) );
+      code_panel.className = "code-panel";
+       const text        = code_panel.appendChild( document.createElement( "p" ) );
+       text.textContent  = "Below is the code for the demo that's running:";
+      this.code_display = code_panel.appendChild( document.createElement( "div" ) );
+      this.code_display.className = "code-display";
+
+//build nav
+/*build_navigator( element, main_scene, additional_scenes, definitions )
+    {                                           // (Internal helper function)
+      const class_list = element.appendChild( document.createElement( "table" ) );
+      class_list.className = "class-list";   
+      const top_cell = class_list.insertRow( -1 ).insertCell( -1 );
+      top_cell.colSpan = 2;
+      top_cell.appendChild( document.createTextNode("Click below to navigate through all classes that are defined.") );
+      const content = top_cell.appendChild( document.createElement( "p" ) );
+      content.style = "text-align:center; margin:0; font-weight:bold";
+      content.innerHTML = "main-scene.js<br>Main Scene: ";
+      const main_scene_link = content.appendChild( document.createElement( "a" ) );
+      main_scene_link.href = "javascript:void(0);"
+      main_scene_link.addEventListener( 'click', () => this.display_code( main_scene ) );
+      main_scene_link.textContent = main_scene.name;
+
+      const second_cell = class_list.insertRow( -1 ).insertCell( -1 );
+      second_cell.colSpan = 2;
+      second_cell.style = "text-align:center; font-weight:bold";
+      const index_src_link = second_cell.appendChild( document.createElement( "a" ) );
+      index_src_link.href = "javascript:void(0);"
+      index_src_link.addEventListener( 'click', () => this.display_code() );
+      index_src_link.textContent = "This page's complete HTML source";
+
+      const third_row = class_list.insertRow( -1 );
+      third_row.style = "text-align:center";
+      third_row.innerHTML = "<td><b>tiny-graphics.js</b><br>(Always the same)</td> \
+                             <td><b>All other class definitions from dependencies:</td>";
+
+      const fourth_row = class_list.insertRow( -1 );
+                                                                            // Generate the navigator table of links:
+      for( let list of [ tiny, definitions ] )
+      { const cell = fourth_row.appendChild( document.createElement( "td" ) );
+                                              // List all class names except the main one, which we'll display separately:
+        const class_names = Object.keys( list ).filter( x => x != main_scene.name );
+        cell.style = "white-space:normal"
+        for( let name of class_names )
+        { const class_link = cell.appendChild( document.createElement( "a" ) );
+          class_link.style["margin-right"] = "80px"
+          class_link.href = "javascript:void(0);"
+          class_link.addEventListener( 'click', () => this.display_code( tiny[name] || definitions[name] ) );
+          class_link.textContent = name;
+          cell.appendChild( document.createTextNode(" ") );
+        }
+      }
+    }
+*/
+      const class_list = element.appendChild( document.createElement( "table" ) );
+      class_list.className = "class-list";   
+      const top_cell = class_list.insertRow( -1 ).insertCell( -1 );
+      top_cell.colSpan = 2;
+      top_cell.appendChild( document.createTextNode("Click below to navigate through all classes that are defined.") );
+      const content = top_cell.appendChild( document.createElement( "p" ) );
+      content.style = "text-align:center; margin:0; font-weight:bold";
+      content.innerHTML = "main-scene.js<br>Main Scene: ";
+      const main_scene_link = content.appendChild( document.createElement( "a" ) );
+      main_scene_link.href = "javascript:void(0);"
+      main_scene_link.addEventListener( 'click', () => this.display_code( selected_class ) );
+      main_scene_link.textContent = selected_class.name;
+
+      const second_cell = class_list.insertRow( -1 ).insertCell( -1 );
+      second_cell.colSpan = 2;
+      second_cell.style = "text-align:center; font-weight:bold";
+      const index_src_link = second_cell.appendChild( document.createElement( "a" ) );
+      index_src_link.href = "javascript:void(0);"
+      index_src_link.addEventListener( 'click', () => this.display_code() );
+      index_src_link.textContent = "This page's complete HTML source";
+
+      const third_row = class_list.insertRow( -1 );
+      third_row.style = "text-align:center";
+      third_row.innerHTML = "<td><b>tiny-graphics.js</b><br>(Always the same)</td> \
+                             <td><b>dependencies.js</b><br>(Different for every demo)</td>";
+    
+      const fourth_row = class_list.insertRow( -1 );
+
+      for( let list of [ tiny_graphics, classes ] )
+      { const cell = fourth_row.appendChild( document.createElement( "td" ) );
+        const class_names = Object.keys( list ).filter( x => x != selected_class.name );     // List all class names except the main one,
+        cell.style = "white-space:normal"                                                    // which we'll display separately.
+        for( let name of class_names )
+        { const class_link = cell.appendChild( document.createElement( "a" ) );
+          class_link.style["margin-right"] = "80px"
+          class_link.href = "javascript:void(0);"
+          class_link.addEventListener( 'click', () => this.display_code( window[name] ) );
+          class_link.textContent = name;
+          cell.appendChild( document.createTextNode(" ") );
+        }
+      }
+
+
+
+
+      //then call this.dispaly_code
+      this.display_code( selected_class );
+    }
+  display_code( class_to_display )                                                           // Pass undefined to choose index.html source.
+    { this.selected_class = class_to_display;
+      if( class_to_display ) this.format_code( class_to_display.toString() );
+      else fetch( document.location.href )
+                .then(   response => response.text() )
+                .then( pageSource => this.format_code( pageSource ) );
+    }
+  format_code( code_string )
+    { this.code_display.innerHTML = "";
+      const color_map = { string: "chocolate", comment: "green", regex: "blue", number: "magenta", 
+                            name: "black", punctuator: "red", whitespace: "black" };
+
+      for( let t of new Code_Manager( code_string ).tokens )
+        if( t.type == "name" && [ ...Object.keys( tiny_graphics ), ...Object.keys( classes ) ].includes( t.value ) )
+          { const link = this.code_display.appendChild( document.createElement( 'a' ) );
+            link.href = "javascript:void(0);"
+            link.addEventListener( 'click', () => this.display_code( window[ t.value ] ) );
+            link.textContent = t.value;
+          }
+        else
+          { const span = this.code_display.appendChild( document.createElement( 'span' ) );
+            span.style.color = color_map[t.type];
+            span.textContent = t.value;
+          }
+    }
+}
+
+
+//this is for html text box text widgets
+
+window.Text_Widget = window.tiny_graphics.Text_Widget =
+class Text_Widget
+{                                                // **Text_Widget** generates HTML documentation and fills a panel with it.  This
+                                                 // documentation is extracted from whichever Scene object gets loaded first.
+  constructor( element, scenes, webgl_manager ) 
+    { const rules = [ ".text-widget { background: white; width:1060px;\
+                        padding:0 10px; overflow:auto; transition:1s; overflow-y:scroll; box-shadow: 10px 10px 90px 0 inset LightGray}",
+                      ".text-widget div { transition:none } "
+                    ];
+      if( document.styleSheets.length == 0 ) document.head.appendChild( document.createElement( "style" ) );
+      for( const r of rules ) document.styleSheets[document.styleSheets.length - 1].insertRule( r, 0 )
+
+      Object.assign( this, { element, scenes, webgl_manager } );
+      this.render();
+    }
+  render( time = 0 )
+    { if( this.scenes[0] )
+        this.scenes[0].show_explanation( this.element, this.webgl_manager )
+      else
+        this.event = window.requestAnimFrame( this.render.bind( this ) )
+    }
+}
