@@ -62,7 +62,7 @@ class Cooking_Mama extends Scene_Component
            handle:   context.get_instance(Phong_Shader).material(Color.of(0.4,0.9,0.9,1), {ambient:1}),
 
 
-          beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,beef_color_def,1), {ambient:1,specularity:0.8,diffusivity:0.25,texture: context.get_instance("assets/food/meat.png",true)}) ,
+         beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1,specularity:0.8,diffusivity:0.25,texture: context.get_instance("assets/food/meat.png",true)}) ,
            
           h_beef:      context.get_instance(Phong_Shader).material(Color.of(0.5,0,0,1), {ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
 
