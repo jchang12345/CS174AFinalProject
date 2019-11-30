@@ -575,8 +575,9 @@ class Cooking_Mama extends Scene_Component
             var sc4=document.getElementById("sc4");
             
             var sc5=document.getElementById("sc5");
+
+            var tc=document.getElementById("timercontainer");
             
-            var sc1style = document.getElementsByClassName("sc1")[0];
             
             if(this.finished)
             {
@@ -590,77 +591,78 @@ class Cooking_Mama extends Scene_Component
             if(this.scene1)
             {
               
-              sc1style.style.display='block';
+              sc1.style.display='block';
+              tc.style.display='none';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc1.innerHTML="Default Reset Scene: To play, press 2 to advance to next scene, and at the end of each scene, proceed by pressing the number corresponding to next scenes. To advance to next scenes, you must finish each scene before the game will allow you to advance!";
               this.drawscene1(graphics_state);
               this.disableOtherScenes(1);
             }
             else if(!this.scene1)
             {
-              sc1style.style.display='none';
+              sc1.style.display='none';
             }
 
-            else if(!this.scene2)
-            {
-              sc2.innerHTML="";
-            }
+            
             if(this.scene2)
             {
+                  sc2.style.display='block';
+                  tc.style.display='block';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc2.innerHTML="Food Dropping Scene:";
               this.drawscene2(graphics_state);
               this.disableOtherScenes(2);
             }
 
             else if(!this.scene2)
             {
-              sc2.innerHTML="";
+              sc2.style.display='none';
             }
             
             if(this.scene3)
             {
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc3.innerHTML="Food Cutting Scene:";
+              sc3.style.display='block';
+              tc.style.display='block';
               //sc3board.innerHTML="<img src='/assets/cuttingboard.jpg' width='400' height='150'>";
               this.drawscene3(graphics_state,t);
               this.disableOtherScenes(3);
             }
             else if(!this.scene3)
             {
-              sc3.innerHTML="";
+              sc3.style.display='none';
               sc3board.innerHTML="";
 
             }
             
             if(this.scene4)
             {
+                  sc4.style.display='block';
+                  tc.style.display='block';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc4.innerHTML="Food Mixing Scene:";
               this.drawscene4(graphics_state);
               this.disableOtherScenes(4);
             }
 
             else if(!this.scene4)
             {
-              sc4.innerHTML="";
+              sc4.style.display='none';
             }
 
           if(this.scene5)
             {
+                  sc5.style.display='block';
+                  tc.style.display='none';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              sc5.innerHTML="Finished Product!";
               this.drawscene5(graphics_state);             
               this.disableOtherScenes(5);
             }
             else if(!this.scene5)
             {
-              sc5.innerHTML="";
+              sc5.style.display='none';
             }
             
       }
