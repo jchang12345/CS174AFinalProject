@@ -80,7 +80,8 @@ class Cooking_Mama extends Scene_Component
             phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
             scene1mama:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
              ambient: 1,
-             texture: context.get_instance( "assets/scene1background.ico",true ),ambient:1}
+             //texture: context.get_instance( "assets/scene1background.ico",true ),ambient:1
+             }
            ), 
             phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
             scene3back:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
@@ -404,7 +405,7 @@ class Cooking_Mama extends Scene_Component
       drawscene1(graphics_state)
       { //food dropping scene!
 
-        this.shapes.cube.draw(graphics_state,this.scene1backimage,this.materials.scene1mama);
+        //this.shapes.cube.draw(graphics_state,this.scene1backimage,this.materials.scene1mama);
 
         //needs to do object collision detection
 
@@ -568,6 +569,7 @@ class Cooking_Mama extends Scene_Component
             //score.innerHTML = this.score;
             var finished = document.getElementById("gg");
             var sc1=document.getElementById("sc1");
+            var sc1bg=document.getElementById("sc1bg");
             var sc2=document.getElementById("sc2");
             var sc3=document.getElementById("sc3");
             var sc3board=document.getElementById("sc3board");
@@ -592,6 +594,7 @@ class Cooking_Mama extends Scene_Component
             {
               
               sc1.style.display='block';
+              sc1bg.style.display='block';
               tc.style.display='none';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
@@ -601,6 +604,7 @@ class Cooking_Mama extends Scene_Component
             else if(!this.scene1)
             {
               sc1.style.display='none';
+              sc1bg.style.display='none';
             }
 
             

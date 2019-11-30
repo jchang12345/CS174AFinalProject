@@ -33,6 +33,7 @@
     color:black;
     font-size:15px;
     box-shadow: 10px 10px rgba(0,0,0,0.5);
+    z-index:2;
   }
 
   #sc2, #sc3, #sc4 {
@@ -54,9 +55,10 @@
     width: 400px;
     color:black;
     padding:20px;
-    background-color: #fff;
+    background-color: #fce9e6;
     font-size:25px;
     border-radius:20px;
+    
   }
 
   .accent {
@@ -89,6 +91,17 @@
     text-shadow: 1px 1px white, -1px -1px white;
     font-family: BubblegumSans;
     font-size:45px;
+  }
+
+  #sc1bg {
+    background-image:url("assets/scene1background.png");
+    text-align: center;
+    position: absolute;
+    top:8px;
+    height:600px;
+    width:1080px;
+    z-index:1;
+    color:transparent;
   }
 
 
@@ -152,9 +165,11 @@
 
 
 <div style="position: absolute; left: 265px; top:270px;color:white; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:45px"> <span id="gg"></span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
+  <div id = "sc1bg">h</div>
   <div id = "sc1"> <span class="accent">Welcome to Mama's kitchen!</span>
   <p>To play, press 2 to advance to next scene, and at the end of each scene, proceed by pressing the number corresponding to next scenes. To advance to next scenes, you must finish each scene before the game will allow you to advance!
   </div> <!--tHis is tagged as gg and when gg, we can display stuff-->
+  
 
   <div id = "sc2">Food Dropping Scene:</div> <!--tHis is tagged as scene2 and when scene2, we can display stuff-->
 
@@ -162,7 +177,7 @@
       <div style="position: absolute; left: 265px; top:270px; "><span id="sc3board" </span></div>
 
   <div id= "sc4"> Food Mixing Scene:</div> <!--tHis is tagged as scene4 and when scene4, we can display stuff-->
-  <div id="sc5">We're done! Thanks for helping mama cook! Here's the beef stew we made.</div> <!--tHis is tagged as scene5 and when scene5, we can display stuff-->
+  <div id="sc5"><span class="accent" style="text-decoration:none;">We're done! Thanks for helping mama cook! Here's the beef stew we made.</span></div> <!--tHis is tagged as scene5 and when scene5, we can display stuff-->
 
 
 
