@@ -1,63 +1,5 @@
 // "stl" represents a raw STL binary read from HTTP response data
-class STL_Shape_From_File extends Shape          // A versatile standalone Shape that imports all its arrays' data from an .obj 3D model file.
-{ constructor( filename )
-    { super( "positions", "normals", "texture_coords" );
-      this.load_file( filename );      // Begin downloading the mesh. Once that completes, return control to our parse_into_mesh function.
-    }
-  load_file( filename )
-      { return fetch( filename )       // Request the external file and wait for it to load.
-          .then( response =>
-            { if ( response.ok )  return Promise.resolve( response.text() )
-              else                return Promise.reject ( response.status )
-            })
-          .then( obj_file_contents => this.parse_into_mesh( obj_file_contents ) )
-          .catch( error => { this.copy_onto_graphics_card( this.gl ); } )                     // Failure mode:  Loads an empty shape.
-      }
-var_parseStlBinary(stl) {
-  // create three.js geometry object, discussed later
-  var geo = new THREE.Geometry();
 
-  // The stl binary is read into a DataView for processing
-    var dv = new DataView(stl, 80); // 80 == unused header
-    var isLittleEndian = true;
-
-    // Read a 32 bit unsigned integer
-    var triangles = dv.getUint32(0, isLittleEndian);
-
-    var offset = 4;
-    for (var i = 0; i < triangles; i++) {
-        // Get the normal for this triangle by reading 3 32 but floats
-        var normal = new THREE.Vector3(
-            dv.getFloat32(offset, isLittleEndian),
-            dv.getFloat32(offset+4, isLittleEndian),
-            dv.getFloat32(offset+8, isLittleEndian)
-        );
-        offset += 12;
-
-        // Get all 3 vertices for this triangle, each represented
-        // by 3 32 bit floats.
-        for (var j = 0; j < 3; j++) {
-            geo.vertices.push(
-                new THREE.Vector3(
-                    dv.getFloat32(offset, isLittleEndian),
-                    dv.getFloat32(offset+4, isLittleEndian),
-                    dv.getFloat32(offset+8, isLittleEndian)
-                )
-            );
-            offset += 12
-        }
-
-        // there's also a Uint16 "attribute byte count" that we
-        // don't need, it should always be zero.
-        offset += 2;
-
-        // Create a new face for from the vertices and the normal
-        geo.faces.push(new THREE.Face3(i*3, i*3+1, i*3+2, normal));
-    }
-
-    // continue parsing STL faces for rendering...
-};
-}
 
 class Shape_From_File extends Shape          // A versatile standalone Shape that imports all its arrays' data from an .obj 3D model file.
 { constructor( filename )
@@ -202,6 +144,35 @@ class Tetrahedron extends Shape                       // The Tetrahedron shape d
 
         this.indices.push( 0, 1, 2,    3, 4, 5,    6, 7, 8,    9, 10, 11 );      // Notice all vertices are unique this time.
       }
+    }
+}
+
+
+
+window.Square_1 = window.classes.Square_1 =
+class Square_1 extends Shape              // A square, demonstrating two triangles that share vertices.  On any planar surface, the interior 
+                                        // edges don't make any important seams.  In these cases there's no reason not to re-use data of
+{                                       // the common vertices between triangles.  This makes all the vertex arrays (position, normals, 
+  constructor()                         // etc) smaller and more cache friendly.
+    { super( "positions", "normals", "texture_coords" );                                   // Name the values we'll define per each vertex.
+      this.positions     .push( ...Vec.cast( [-1,-1,0], [1,-1,0], [-1,1,0], [1,1,0] ) );   // Specify the 4 square corner locations.
+      this.normals       .push( ...Vec.cast( [0,0,1],   [0,0,1],  [0,0,1],  [0,0,1] ) );   // Match those up with normal vectors.
+      this.texture_coords.push( ...Vec.cast( [0,0],     [1,0],    [0,1],    [1,1]   ) );   // Draw a square in texture coordinates too.
+      this.indices       .push( 0, 1, 2,     1, 3, 2 );                   // Two triangles this time, indexing into four distinct vertices.
+    }
+}
+
+window.Cube_1 = window.classes.Cube_1 =
+class Cube_1 extends Shape    // A cube inserts six square strips into its arrays.
+{ constructor()  
+    { super( "positions", "normals", "texture_coords" );
+      for( var i = 0; i < 3; i++ )                    
+        for( var j = 0; j < 2; j++ )
+        { var square_transform = Mat4.rotation( i == 0 ? Math.PI/2 : 0, Vec.of(1, 0, 0) )
+                         .times( Mat4.rotation( Math.PI * j - ( i == 1 ? Math.PI/2 : 0 ), Vec.of( 0, 1, 0 ) ) )
+                         .times( Mat4.translation([ 0, 0, 1 ]) );
+          Square_1.insert_transformed_copy_into( this, [], square_transform );
+        }
     }
 }
 
@@ -487,6 +458,9 @@ class Movement_Controls extends Scene_Component    // Movement_Controls is a Sce
       canvas  .addEventListener( "mouseout",  e => { if( !this.mouse.anchor ) this.mouse.from_center.scale(0) } );  
     }
   show_explanation( document_element ) { }
+ 
+//LINE 464 CHANGES CONTROL PANEL MAYBE USEFUL OR STUFF TO CONSIDER!!!
+
   make_control_panel()                                                        // This function of a scene sets up its keyboard shortcuts.
     { const globals = this.globals;
       this.control_panel.innerHTML += "Click and drag the scene to <br> spin your viewpoint around it.<br>";
