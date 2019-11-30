@@ -6,12 +6,43 @@
 <script src="tiny-graphics.js" ></script>  <!--  Javascript "include" files.  Any code in them gets executed as part of the page loading. //-->
 <script src= "dependencies.js" ></script>
 <script src=   "main-scene.js" ></script>
+
+<link href="https://fonts.googleapis.com/css?family=Gochi+Hand&display=swap" rel="stylesheet">
+
+
 <style>
-  * { font-family: monospace }
-  body { background: DarkGray }
+  * { font-family: monospace; }
+  body { background: DarkGray; }
 
 
+  .sc1 {
+    position: absolute;
+    width : 600px;
+    left: 15px;
+    top:50%;
+    left:40%;
+    overflow: auto;
+    padding: 20px;
+    margin: -100px 0px 0px -300px;
+    border-radius:20px;
+    background-color:pink;
+    color:black;
+    font-family:'Gochi Hand', cursive;
+    font-size:15px;
+    box-shadow: 10px 10px rgba(0,0,0,0.5);
+  }
 
+  .sc2 {
+    position: absolute;
+    width: 200px;
+    left: 50px;
+    top:50px;
+    
+
+    color:black;
+    /*text-shadow: 1px 1px blue, -1px -1px blue;*/
+    font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px;
+  }
 
 
   div { background: white }
@@ -73,16 +104,16 @@
 </div>
 
 
-<div style="position: absolute; left: 265px; top:270px;color:white; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:45px"> <span id="gg"</span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
-  <div style="position: absolute; left: 15px; top:90px; right: 660px; background-color:pink; color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:15px"> <span id="sc1"</span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
+<div style="position: absolute; left: 265px; top:270px;color:white; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:45px"> <span id="gg"></span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
+  <div class = "sc1"> <span id="sc1"></span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
 
-  <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc2"</span></div> <!--tHis is tagged as scene2 and when scene2, we can display stuff-->
+  <div class = "sc2"> <span id="sc2"></span></div> <!--tHis is tagged as scene2 and when scene2, we can display stuff-->
 
-  <div style="position: absolute; left: 26px; top:20px; background-color:#B9DEED; color:black; text-shadow: 1px 1px black, -1px -1px black; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:22px"> <span id="sc3"</span></div> <!--tHis is tagged as scene3 and when scene3, we can display stuff-->
+  <div class = "sc2"> <span id="sc3"</span></div> <!--tHis is tagged as scene3 and when scene3, we can display stuff-->
       <div style="position: absolute; left: 265px; top:270px; "><span id="sc3board" </span></div>
 
-  <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc4"</span></div> <!--tHis is tagged as scene4 and when scene4, we can display stuff-->
-  <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc5"</span></div> <!--tHis is tagged as scene5 and when scene5, we can display stuff-->
+  <div class= "sc2"> <span id="sc4"></span></div> <!--tHis is tagged as scene4 and when scene4, we can display stuff-->
+  <div style="position: absolute; left: 265px; top:270px;color:black; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:25px"> <span id="sc5"></span></div> <!--tHis is tagged as scene5 and when scene5, we can display stuff-->
 
 
 

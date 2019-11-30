@@ -80,7 +80,7 @@ class Cooking_Mama extends Scene_Component
             phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
             scene1mama:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
              ambient: 1,
-             texture: context.get_instance( "assets/scene1background.ico", use_mipMap2 )}
+             texture: context.get_instance( "assets/scene1background.ico",true ),ambient:1}
            ), 
             phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
             scene3back:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
@@ -166,8 +166,6 @@ class Cooking_Mama extends Scene_Component
           this.scene5location=this.scene5location.times(Mat4.translation(Vec.of(-100,-100,0)));
 //SCENE 5 OBJECTS BELOW
 
-
-
           //END SCENE5
 
           //game mechanics
@@ -182,9 +180,6 @@ class Cooking_Mama extends Scene_Component
           this.time=0; //global timer
 
           this.rank=0; //rank 0:F rank 1:D rank 2: C rank 3: B rank 4: A rank 5: S , so 6 ranks total
-
-
-
 
           //scene timers:
           this.scene2time=0;
@@ -581,6 +576,8 @@ class Cooking_Mama extends Scene_Component
             
             var sc5=document.getElementById("sc5");
             
+            var sc1style = document.getElementsByClassName("sc1")[0];
+            
             if(this.finished)
             {
                   
@@ -592,6 +589,8 @@ class Cooking_Mama extends Scene_Component
             }
             if(this.scene1)
             {
+              
+              sc1style.style.display='block';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               sc1.innerHTML="Default Reset Scene: To play, press 2 to advance to next scene, and at the end of each scene, proceed by pressing the number corresponding to next scenes. To advance to next scenes, you must finish each scene before the game will allow you to advance!";
@@ -600,7 +599,7 @@ class Cooking_Mama extends Scene_Component
             }
             else if(!this.scene1)
             {
-              sc1.innerHTML=""
+              sc1style.style.display='none';
             }
 
             else if(!this.scene2)
