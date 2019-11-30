@@ -67,8 +67,8 @@ class Cooking_Mama extends Scene_Component
           h_beef:      context.get_instance(Phong_Shader).material(Color.of(0.5,0,0,1), {ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
 
 
-           carrot:        context.get_instance(Phong_Shader).material(Color.of(.4,0,0,1), {ambient:0.3}) ,
-           onion:        context.get_instance(Phong_Shader).material(Color.of(0,.4,0,1), {ambient:0.4}),
+           carrot:        context.get_instance(Phong_Shader).material(Color.of(215/255,114/255,44/255,1), {ambient:0.3}) ,
+           onion:        context.get_instance(Phong_Shader).material(Color.of(1,0.9,.9,1), {ambient:0.4}),
            potato:       context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {texture: context.get_instance("assets/food/potato.png",true),ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
            allfood:   context.get_instance(Phong_Shader).material(Color.of(0.3,0.3,0.3,1), {ambient:1}),
 
@@ -87,7 +87,13 @@ class Cooking_Mama extends Scene_Component
             scene3back:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
              ambient: 1,
              texture: context.get_instance( "assets/scene3background.ico", use_mipMap2 )}
-           ), 
+           ),
+
+           phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
+            scene2back:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
+             ambient: 1,
+             texture: context.get_instance( "assets/scene2background.ico", use_mipMap2 )}
+           ),  
           };
 
 
@@ -111,6 +117,49 @@ class Cooking_Mama extends Scene_Component
           this.scene2location=Mat4.identity();
           this.scene2location=this.scene2location.times(Mat4.translation(Vec.of(100,100,0)));
                     //SCENE 2 OBJECTS BELOW
+          this.s2beef1=Mat4.identity();
+          this.s2beef1=this.s2beef1.times(Mat4.translation(Vec.of(103,107,9)));
+
+          this.s2carrot1=Mat4.identity();
+          this.s2carrot1=this.s2carrot1.times(Mat4.translation(Vec.of(105,105,0))).times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
+
+          this.s2onion1=Mat4.identity();
+          this.s2onion1=this.s2onion1.times(Mat4.translation(Vec.of(100,100,0)))
+
+          this.s2potato1=Mat4.identity();
+          this.s2potato1 =this.s2potato1.times(Mat4.translation(Vec.of(95,100,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
+
+                    //SCENE 2 OBJECTS BELOW
+          this.s2beef2=Mat4.identity();
+          this.s2beef2=this.s2beef2.times(Mat4.translation(Vec.of(105,100,0)));
+
+          this.s2carrot2=Mat4.identity();
+          this.s2carrot2=this.s2carrot2.times(Mat4.translation(Vec.of(105,105,0))).times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
+
+          this.s2onion2=Mat4.identity();
+          this.s2onion2=this.s2onion2.times(Mat4.translation(Vec.of(100,100,0)))
+
+          this.s2potato2=Mat4.identity();
+          this.s2potato2 =this.s2potato2.times(Mat4.translation(Vec.of(95,100,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
+
+                    //SCENE 2 OBJECTS BELOW
+          this.s2beef3=Mat4.identity();
+          this.s2beef3=this.s2beef3.times(Mat4.translation(Vec.of(105,100,0)));
+
+          this.s2carrot3=Mat4.identity();
+          this.s2carrot3=this.s2carrot3.times(Mat4.translation(Vec.of(105,105,0))).times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
+
+          this.s2onion3=Mat4.identity();
+          this.s2onion3=this.s2onion3.times(Mat4.translation(Vec.of(100,100,0)))
+
+          this.s2potato3=Mat4.identity();
+          this.s2potato3 =this.s2potato3.times(Mat4.translation(Vec.of(95,100,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
+
+
+          this.scene2backimage=this.scene2location;
+          this.scene2backimage=this.scene2backimage.times(Mat4.translation(Vec.of(0,0,-13)));
+          this.scene2backimage=this.scene2backimage.times(Mat4.scale(Vec.of(30,21,6))); //behind everything else
+
 
 
 
@@ -201,7 +250,7 @@ class Cooking_Mama extends Scene_Component
 
 
 
-        this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 0,1,1,1 ), 100000 ) ];
+        this.lights = [ new Light( Vec.of( 5,-10,5,1 ), Color.of( 248/256,222/256,126/256,1 ), 100000 ) ];
       }
       startTime(t) //for each scene this is the timer. score should be adjusted at the end based on how well each task was performed
       {
@@ -266,6 +315,7 @@ class Cooking_Mama extends Scene_Component
             this.restartflag=true; //starts the game for first time.
             this.attached=()=>this.scene1location;
             this.scene1=true;
+            this.score=0;
             if(this.scene1)
             {
               this.disableOtherScenes(1);  
@@ -317,13 +367,14 @@ class Cooking_Mama extends Scene_Component
         this.key_triggered_button( "(Scene 5) Finished Product Scene", [ "5" ], () => 
           {
          //   this.scene5=!this.scene5;
-                        this.scene5=!this.scene5;
+                        this.scene5=true;
                                     this.attached = () => this.scene5location;
 
             if(this.scene5)
             {
               this.disableOtherScenes(5);
             }
+            
 
           } );
 
@@ -413,10 +464,62 @@ class Cooking_Mama extends Scene_Component
 
         //score accumulation logic
       }
-      drawscene2(graphics_state)
+      rotate_drop(graphics_state,t)
+      {
+            var topTrans = (Mat4.translation(Vec.of(-10,20,0))); //translate by this to be at top
+
+
+            var rotate;
+
+             let maxAngle = (-1)*.4*Math.PI;
+             let angle = maxAngle/2 + (maxAngle/2) * Math.sin(0.2*t);
+             rotate = Mat4.rotation(angle, Vec.of(0,0,1));
+             let rotatey = Mat4.rotation(angle, Vec.of(0,1,0));
+             let fall = Mat4.translation([0,-0.1*t-(0.68*Math.pow(0.1*t,2)),0.1]);
+             let ifall = Mat4.translation([0,+0.1*(t-2)+(0.68*Math.pow(0.1*(t-2),2)),-0.1]);
+
+
+             //object=object.times(fall).times(rotate).times(rotatey);
+             this.s2beef1=this.s2beef1.times(ifall).times(fall).times(rotate).times(rotatey);
+             if(this.scene2)
+             {
+               if(this.scene2time%2==0)
+               {
+                 //reset it
+                  //this.s2beef1=this.s2beef1.times(Mat4.translation(Vec.of(0,0.1,0)));
+
+                  this.reset_position_of_food();
+
+               }
+             }
+      }
+      reset_position_of_food()
+      {
+                          this.s2beef1=Mat4.identity();
+          this.s2beef1=this.s2beef1.times(Mat4.translation(Vec.of(103,107,9)));
+      }
+      drawscene2(graphics_state,t)
       { //food dropping scene!
 
+
+        //          this.scene2location=this.scene2location.times(Mat4.translation(Vec.of(100,100,0)));
+
         this.shapes.cube.draw(graphics_state,this.scene2location,this.materials.test);
+
+        //dropping 3 beef, 3 carrots, 3 onions, and 3potatos
+//this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef); 
+
+        //this.shapes.beef.draw(graphics_state,this.beefsc2,this.materials.beef);
+
+        // TODO: Make Animations
+
+            this.rotate_drop(graphics_state,(t));
+            
+
+             //topTrans = topTrans.times(fall).times(rotate).times(rotatey);
+            this.shapes.beef.draw(graphics_state,this.s2beef1,this.materials.beef);
+            this.shapes.cube.draw(graphics_state,this.scene2backimage,this.materials.scene2back);
+
 
         //needs to do object collision detection
 
@@ -565,12 +668,14 @@ class Cooking_Mama extends Scene_Component
             }
 
 
+
             score.innerHTML = this.score;
             //score.innerHTML = this.score;
             var finished = document.getElementById("gg");
             var sc1=document.getElementById("sc1");
             var sc1bg=document.getElementById("sc1bg");
             var sc2=document.getElementById("sc2");
+            var sc2bg=document.getElementById("sc2bg");
             var sc3=document.getElementById("sc3");
             var sc3board=document.getElementById("sc3board");
             
@@ -612,10 +717,11 @@ class Cooking_Mama extends Scene_Component
             if(this.scene2)
             {
                   sc2.style.display='block';
+                 // sc2bg.style.display='block';
                   tc.style.display='block';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
-              this.drawscene2(graphics_state);
+              this.drawscene2(graphics_state,t);
               this.disableOtherScenes(2);
             }
 
