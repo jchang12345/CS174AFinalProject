@@ -577,6 +577,7 @@ class Cooking_Mama extends Scene_Component
             var sc4=document.getElementById("sc4");
             
             var sc5=document.getElementById("sc5");
+            var sc5bg=document.getElementById("sc5bg");
 
             var tc=document.getElementById("timercontainer");
             
@@ -658,6 +659,7 @@ class Cooking_Mama extends Scene_Component
           if(this.scene5)
             {
                   sc5.style.display='block';
+                  sc5bg.style.display='block';
                   tc.style.display='none';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
@@ -666,6 +668,7 @@ class Cooking_Mama extends Scene_Component
             }
             else if(!this.scene5)
             {
+              sc5bg.style.display='none';
               sc5.style.display='none';
             }
             
