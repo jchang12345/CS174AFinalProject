@@ -12,10 +12,22 @@ var knifeZloc=3;
 var potXloc=100;
 var potYloc=99;
 var potZloc=0;
+          
 
+var rot_ladel_angle=0.055;
+var ladelX=1;
+var ladelY=0;
+var ladelZ=0;
+
+var sc4insnslist= [];
 
 var beef_color_def=0;
 
+//scene4
+               
+               var count=0;
+               var clockwiseflag=true; //start w/ clk wise insns and alternate
+               var counterclockwiseflag=false; //alt to ccw flag
 
 
 window.Cooking_Mama = window.classes.Cooking_Mama =
@@ -46,6 +58,8 @@ class Cooking_Mama extends Scene_Component
 
                        pot:      new Shape_From_File( "assets/knife/pot.obj" ) ,
 
+                       ladel:  new Shape_From_File("assets/knife/ladle.obj"),
+
 
                        cube: new Cube_1(),
                        //allfood: new Shape_From_File("assets/food/foods.obj"),
@@ -66,6 +80,7 @@ class Cooking_Mama extends Scene_Component
            handle:   context.get_instance(Phong_Shader).material(Color.of(0.4,0.9,0.9,1), {ambient:1}),
 
           pot:   context.get_instance(Phong_Shader).material(Color.of(89/256,60/256,31/256,1), {ambient:1}),
+          ladel:   context.get_instance(Phong_Shader).material(Color.of(192/256,192/256,191/256,1), {ambient:1}),
 
 
          beef:      context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {ambient:1,specularity:0.8,diffusivity:0.25,texture: context.get_instance("assets/food/meat.png",true)}) ,
@@ -101,6 +116,11 @@ class Cooking_Mama extends Scene_Component
              texture: context.get_instance( "assets/scene2background.ico", use_mipMap2 )}
            ),  
 
+            phong: context.get_instance( Phong_Shader ).material( Color.of( 1,1,0,1 ) ),
+            scene4back:      context.get_instance(Phong_Shader ).material( Color.of(0,0,0,1), {
+             ambient: 1,
+             texture: context.get_instance( "assets/scene4background.ico", use_mipMap2 )}
+           ),
 
                         shadow: context.get_instance( Shadow_Shader ).material()
 
@@ -236,6 +256,16 @@ class Cooking_Mama extends Scene_Component
           this.scene4location=this.scene4location.times(Mat4.translation(Vec.of(0,-100,0)));
 //SCENE 4 OBJECTS BELOW
 
+          this.scene4backimage=this.scene4location;
+          this.scene4backimage=this.scene4backimage.times(Mat4.translation(Vec.of(0,0,-13)));
+          this.scene4backimage=this.scene4backimage.times(Mat4.scale(Vec.of(30,21,6))); //behind everything else
+
+
+          this.scene4pot=Mat4.identity();
+          this.scene4pot=this.scene4pot.times(Mat4.translation(Vec.of(1,-100,-1)));
+          this.scene4pot=this.scene4pot.times(Mat4.scale(Vec.of(2.5,2.1,1)));
+         // this.scene4pot=this.scene4pot.times(Mat4.rotation(Math.PI,Vec.of(0,0,1)));
+          this.scene4pot=this.scene4pot.times(Mat4.rotation(Math.PI/2+9,Vec.of(1,0,0)));
 
 
           //END SCENE4
@@ -441,8 +471,9 @@ class Cooking_Mama extends Scene_Component
 
         this.new_line();
 
-        this.key_triggered_button( "Move Left", [ "g" ], ()=> 
+        this.key_triggered_button( "Move Left/Rotate clockwise", [ "c" ], ()=> 
           {
+            console.log(ladelX,ladelY);
 
             //MOVES THE KNIFE TO THE LEFT, or ROTATE CCW, or move basket to the left
             if(knifeXloc>0 &&this.scene3 &&this.scene3time!=0)
@@ -454,10 +485,58 @@ class Cooking_Mama extends Scene_Component
             {
               potXloc=potXloc-1;
             }
+            if(this.scene4&&this.scene4time!=0)
+            {
+              //rotate clockwise for ladelangel
+               if(ladelX<=1.1 &&ladelX>-0.1&&ladelY<1&&ladelY>=-0.2) //1,0 ->0,1 the fuck it goes into decimal based on console log lol
+              {
+                              ladelX=ladelX-0.1;
+                              ladelY=ladelY+0.1;
+                              //ladelYflag=1;
+              }
+              else if(ladelX<=0&&ladelX>-1&&ladelY>=0&&ladelY<1.1)//0,1->-1,0
+              {
+                ladelX=ladelX-0.1;
+                ladelY=ladelY-0.1;
+              }
+              else if(ladelX<0 &&ladelX>=-1.1 &&ladelY<0.2 &&ladelY>=-1)//-1,0 ->0,-1
+              {
+                ladelX=ladelX+0.1;
+                ladelY=ladelY-0.1;
+              }
+              else if(ladelX<=1 &&ladelX>-0.2&&ladelY<0&&ladelY>=-1.1) //0,-1  ->1,0
+              {
+                              ladelX=ladelX+0.1;
+                              ladelY=ladelY+0.1; //dies at x=-1.1 y=-0.1 
+              }
+              if(ladelX<=1.1 &&ladelX>-0.1&&ladelY<1&&ladelY>=-0.2) //1,0 ->0,1 the fuck it goes into decimal based on console log lol
+              {
+                              ladelX=ladelX-0.1;
+                              ladelY=ladelY+0.1;
+                              //ladelYflag=1;
+              }
+              else if(ladelX<=0&&ladelX>-1&&ladelY>=0&&ladelY<1.1)//0,1->-1,0
+              {
+                ladelX=ladelX-0.1;
+                ladelY=ladelY-0.1;
+              }
+              else if(ladelX<0 &&ladelX>=-1.1 &&ladelY<0.2 &&ladelY>=-1)//-1,0 ->0,-1
+              {
+                ladelX=ladelX+0.1;
+                ladelY=ladelY-0.1;
+              }
+              else if(ladelX<=1 &&ladelX>-0.2&&ladelY<0&&ladelY>=-1.1) //0,-1  ->1,0
+              {
+                              ladelX=ladelX+0.1;
+                              ladelY=ladelY+0.1; //dies at x=-1.1 y=-0.1 
+              }
+
+            }
           }); 
-        this.key_triggered_button( "Move Right", [ "j" ], ()=> 
+        this.key_triggered_button( "Move Right/Rotate counterclockwise", [ "v" ], ()=> 
           {
             //MOVES THE KNIFE TO THE RIGHT, or ROTATE CW, or move basket to the right
+                        console.log(ladelX,ladelY);
             if(knifeXloc<9 &&this.scene3&&this.scene3time!=0)
             {
               knifeXloc=knifeXloc+1;
@@ -466,8 +545,57 @@ class Cooking_Mama extends Scene_Component
             {
               potXloc=potXloc+1;
             }
+                        if(this.scene4time!=0&&this.scene4)
+            {
+
+
+              //rotate counter clockwise for ladelangel
+               if(ladelX<=1.1 &&ladelX>0&&ladelY<=0.11&&ladelY>-1) //1,0 ->0,-1 the fuck it goes into decimal based on console log lol
+              {
+                              ladelX=ladelX-0.1;
+                              ladelY=ladelY-0.1;
+                              //ladelYflag=1;
+              }
+              else if(ladelX<=0 &&ladelX>-1&&ladelY<0&&ladelY>=-1.1) //0,-1  ->-1,0
+              {
+                              ladelX=ladelX-0.1;
+                              ladelY=ladelY+0.1; //dies at x=-1.1 y=-0.1 
+              }
+              else if(ladelX<0 &&ladelX>=-1.1 &&ladelY<1 &&ladelY>=-0.2)//-1,0 ->0,1
+              {
+                ladelX=ladelX+0.1;
+                ladelY=ladelY+0.1;
+              }
+              else if(ladelX<1&&ladelX>=-0.2&&ladelY>-0.11&&ladelY<=1.1)//0,1->1,0
+              {
+                ladelX=ladelX+0.1;
+                ladelY=ladelY-0.1;
+              }
+               if(ladelX<=1.1 &&ladelX>0&&ladelY<=0.11&&ladelY>-1) //1,0 ->0,-1 the fuck it goes into decimal based on console log lol
+              {
+                              ladelX=ladelX-0.1;
+                              ladelY=ladelY-0.1;
+                              //ladelYflag=1;
+              }
+              else if(ladelX<=0 &&ladelX>-1&&ladelY<0&&ladelY>=-1.1) //0,-1  ->-1,0
+              {
+                              ladelX=ladelX-0.1;
+                              ladelY=ladelY+0.1; //dies at x=-1.1 y=-0.1 
+              }
+              else if(ladelX<0 &&ladelX>=-1.1 &&ladelY<1 &&ladelY>=-0.2)//-1,0 ->0,1
+              {
+                ladelX=ladelX+0.1;
+                ladelY=ladelY+0.1;
+              }
+              else if(ladelX<1&&ladelX>=-0.2&&ladelY>-0.11&&ladelY<=1.1)//0,1->1,0
+              {
+                ladelX=ladelX+0.1;
+                ladelY=ladelY-0.1;
+              }
+                     
+            }
           });
-        this.key_triggered_button( "Perform Cut", [ "h" ], ()=> 
+        this.key_triggered_button( "Perform Cut", [ "b" ], ()=> 
           {
             //KNIFE SCENE ONLY, performs a cut. 
             if(knifeZloc>0 &&this.scene3&&this.scene3time!=0)
@@ -530,7 +658,7 @@ class Cooking_Mama extends Scene_Component
             //strategy: if any of the food falling is above 99 in y, then check if their x range is aligned with the x of pot.
             //upper and lower bnds for every single obj in this scene are this when checking obj collision
             var upperboundY=99.5;
-            var lowerboundY=97.5;
+            var lowerboundY=98.1;
 
             var boundX=1.5;
             //var rightboundX=1;
@@ -957,10 +1085,31 @@ class Cooking_Mama extends Scene_Component
 
       }
 
-      drawscene4(graphics_state)
+      drawscene4(graphics_state)  //IF THEY CAN DO 10 ROTATIONS (I timed around 14 opossible rotations at curr speed) then they get max points
+      //they can get up to 5000 points so ig each successful rotation is +500. no penalty for wrong rotations.
       {
         //food mixing scene!
-        this.shapes.cube.draw(graphics_state,this.scene4location,this.materials.test);
+//        this.shapes.cube.draw(graphics_state,this.scene4location,this.materials.test);
+
+        this.shapes.cube.draw(graphics_state,this.scene4backimage,this.materials.scene4back);
+        this.shapes.pot.draw(graphics_state,this.scene4pot,this.materials.pot);
+
+
+
+          this.ladel=this.scene4location;
+          this.ladel=this.ladel.times(Mat4.translation(Vec.of(0,0,1)));
+          var base_angle=Math.PI/2;
+          this.ladel=this.ladel.times(Mat4.rotation(base_angle,Vec.of(1,0,0)));
+          this.ladel=this.ladel.times(Mat4.rotation(0.056,Vec.of(0,1,0))); //about 10 degrees
+          this.ladel=this.ladel.times(Mat4.rotation(2*(0.056+0.056+0.056),Vec.of(1,0,0)));
+          //this.ladel=this.ladel.times(Mat4.rotation(rot_ladel_angle,Vec.of(1,0,0))); //makes it more straight
+          //z makes it spin around in a circle on its own axis
+          //wait this shit is a circular translation lmfao
+          this.ladel=this.ladel.times(Mat4.translation(Vec.of(ladelX,ladelY,ladelZ)));
+
+
+
+        this.shapes.ladel.draw(graphics_state,this.ladel,this.materials.ladel);
 
         //needs to give instruction and score accumulation
       }
@@ -1017,6 +1166,11 @@ class Cooking_Mama extends Scene_Component
         }
       }
       
+//random int
+getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 //displays UI for score
       UI(graphics_state, t)
       {
@@ -1024,7 +1178,9 @@ class Cooking_Mama extends Scene_Component
             var time=document.getElementById("timer");
             var timeImg=document.getElementById("timeIMG");
             var deadclk=document.getElementById("deadtimeIMG");
-            var ss=document.getElementById("ss");
+
+            var scene4instructions=document.getElementById("sc4insns");
+            
 
             //this is dependent on which scene
             if(this.scene1)
@@ -1053,6 +1209,61 @@ class Cooking_Mama extends Scene_Component
                timeImg.innerHTML = '<img src="assets/timer.ico"> </img>'.repeat(this.scene4time/12+1);//so 5 times
                deadclk.innerHTML = '<img src="assets/deadclock.ico"> </img>'.repeat(Math.max(0,1-this.scene4time));//so 1 times
 
+               while(count<20)
+               {
+                                  var numNext=this.getRandomInt(3); //expected: 0 1 or 2 . just say MAX is 10 ...
+                if(count>=10)
+                {
+                  console.log("shit");
+                  count=10;
+                  if(clockwiseflag&&count<=10)
+                  {
+                    //scene4instructions.innerHTML= '<img src="assets/clkwise.ico"></img>'.repeat(Math.min(numNext,10-count));
+                    clockwiseflag=!clockwiseflag
+                    counterclockwiseflag=!counterclockwiseflag;
+                  }
+                  else if(counterclockwiseflag&&count<=10)
+                  {
+                    //scene4instructions.innerHTML= '<img src="assets/ccw.ico"></img>'.repeat(Math.min(10-count,numNext));
+                    clockwiseflag=!clockwiseflag
+                    counterclockwiseflag=!counterclockwiseflag;
+                  }
+                  break;
+                }
+                else
+                {
+                  console.log("coou");
+                  count=count+numNext;
+                  if(clockwiseflag&&count<=10)
+                  {
+                    //scene4instructions.innerHTML= '<img src="assets/clkwise.ico"></img>'.repeat(numNext);
+                    for (let c=0;c<numNext;c++)
+                    {
+                                          sc4insnslist.push(1);//1 means clockwise
+
+                    }
+                    
+                    clockwiseflag=!clockwiseflag
+                    counterclockwiseflag=!counterclockwiseflag;
+                  }
+                  else if(counterclockwiseflag&&count<=10)
+                  {
+                    for (let c=0;c<numNext;c++)
+                    {
+                                          sc4insnslist.push(0);//0 means ccw clockwise
+                                      
+                    }                   // scene4instructions.innerHTML= '<img src="assets/ccw.ico"></img>'.repeat(numNext);
+                    clockwiseflag=!clockwiseflag
+                    counterclockwiseflag=!counterclockwiseflag;
+                  }
+                }
+
+
+
+               }
+               //scene4instructions.innerHTML= '<img src="assets/'
+//Math.random()
+
             }
 /*
             if(this.finishedscene2)
@@ -1077,12 +1288,14 @@ class Cooking_Mama extends Scene_Component
             var sc5bg=document.getElementById("sc5bg");
 
             var tc=document.getElementById("timercontainer");
-            
+
+            var ss=document.getElementById("ss");
+
             
             if(this.finished)
             {
                   
-                  gg.innerHTML = "Game Over, Press [1][3] to restart";
+                  gg.innerHTML = "Game Over, Press [1] to restart";
             }
             else if(!this.finished)
             {
@@ -1158,13 +1371,12 @@ class Cooking_Mama extends Scene_Component
 
           if(this.scene5)
             {
-                  ss.innerHTML = this.score;
+                                ss.innerHTML = this.score;
+
                   sc5.style.display='block';
                   sc5bg.style.display='block';
                   tc.style.display='none';
-                  
                   this.finished=true; //ONLY WAY TO DO A CLEAN RESTART IS IF THIS.finished=true
-
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               this.drawscene5(graphics_state);             
@@ -1186,9 +1398,11 @@ class Cooking_Mama extends Scene_Component
           {
                 if(this.finished)
                 {
-                      this.score = 0;
+                      this.score =0;
                       this.time=0;
                       this.finished=false;
+                      sc4insnslist= [];
+
 
                       //also reset position of the foods to have them REFALL!
 
