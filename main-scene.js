@@ -273,8 +273,8 @@ this.potato =this.potato.times(Mat4.scale([2,1,1]));
           this.carrotFlag = -1; //SCENE 3 HAS CARROT IN UNINITIALIZED STATE! CARROT NOT DRAWN
           this.carrotBad = [-1,-1,-1,-1,-1]; 
             
-          this.potatoFlag = -1; 
-          this.potatoBad = [-1,-1,-1,-1,-1];
+          //this.potatoFlag = -1; 
+          //this.potatoBad = [-1,-1,-1,-1,-1];
 
 
 
@@ -687,11 +687,11 @@ this.potato =this.potato.times(Mat4.scale([2,1,1]));
           }
           else if(this.carrotFlag == 5){ //CLEAN UP CUTTING BOARD IF CARROT DONE
               this.carrotFlag = 6;
-              this.potatoFlag = 0;
+              //this.potatoFlag = 0;
           }
-          else if(this.potatoFlag == 6){ //CLEAN UP CUTTING BOARD IF POTATO DONE
+          /*else if(this.potatoFlag == 6){ //CLEAN UP CUTTING BOARD IF POTATO DONE
                 this.potatoFlag = 7;
-          }
+          }*/
         }
         );
 
@@ -784,7 +784,7 @@ this.potato =this.potato.times(Mat4.scale([2,1,1]));
                   this.carrotBad[this.carrotFlag] = 0;
                 this.carrotFlag = this.carrotFlag + 1;
           }
-          else if(this.carrotFlag == 6 && this.potatoFlag < 5){
+          /*else if(this.carrotFlag == 6 && this.potatoFlag < 5){
                 this.cutLoc = 0;
                 switch(this.potatoFlag){
                       case(0):
@@ -813,7 +813,7 @@ this.potato =this.potato.times(Mat4.scale([2,1,1]));
                 else
                   this.potatoBad[this.potatoFlag] = 0;
                 this.potatoFlag = this.potatoFlag + 1;
-          }
+          }*/
             this.scene3cuttime=t;
             knifeZloc=knifeZloc+2; //pull it back up for them
             beef_color_def=0.3;
@@ -1339,7 +1339,7 @@ if(this.onionFlag != -1 && this.onionFlag != 5){ //IF ONION CUTTING NOT INITIALI
 
         }
 
-        if(this.potatoFlag != -1 && this.potatoFlag != 6){ //CURRENTLY IN PROGRESS; MAY REMOVE 
+        /*if(this.potatoFlag != -1 && this.potatoFlag != 6){ //CURRENTLY IN PROGRESS; MAY REMOVE 
               this.potatoSAMat = this.potato.times( Mat4.translation([2,-0.5,0]) ).times( Mat4.scale([0.1,0.3,0.3]) ); 
               this.potatoXAMat = this.potato.times( Mat4.translation([2,-0.5,0]) ).times( Mat4.scale([0.1,0.3,0.3]) ); 
               if(this.potatoFlag == 0){ 
@@ -1359,7 +1359,7 @@ if(this.onionFlag != -1 && this.onionFlag != 5){ //IF ONION CUTTING NOT INITIALI
               //else if(this.potatoBad[0] == 0)
                   //this.shapes.potatoSA.draw(graphics_state,this.potatoSAMat,this.materials.potato);
 
-        }
+        }*/
 
         //NEEDS TO UPDATE POSITIONS else it wont know i am moving....
 
