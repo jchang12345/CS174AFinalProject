@@ -23,6 +23,7 @@ var sc4insnslist= [];
 
 var beef_color_def=0;
 
+
 //scene4
                
                var count=0;
@@ -142,7 +143,7 @@ class Cooking_Mama extends Scene_Component
 
 
           //END SCENE1
-          var rot=Mat4.rotation(Math.PI/2,Vec.of(0,1,0));
+          var rot=Mat4.rotation(Math.PI/12,Vec.of(0,1,0)).times(Mat4.rotation(Math.PI/7,Vec.of(1,0,0)))
 
                     //this is scene 2 location. we put it at x=100 y=100
           this.scene2location=Mat4.identity();
@@ -185,7 +186,7 @@ class Cooking_Mama extends Scene_Component
 
                     //SCENE 2 OBJECTS BELOW
           this.s2beef3=Mat4.identity();
-          this.s2beef3=this.s2beef3.times(Mat4.translation(Vec.of(105,109,0)));
+          this.s2beef3=this.s2beef3.times(Mat4.translation(Vec.of(106,109,0)));
 
           this.s2carrot3=Mat4.identity();
           this.s2carrot3=this.s2carrot3.times(Mat4.translation(Vec.of(98,108,0))).times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
@@ -471,9 +472,14 @@ class Cooking_Mama extends Scene_Component
 
         this.new_line();
 
+        var sc4stewpic=document.getElementById("sc4stewpic");
+
         this.key_triggered_button( "Move Left/Rotate clockwise", [ "c" ], ()=> 
           {
+             
             console.log(ladelX,ladelY);
+
+            sc4stewpic.style.WebkitTransform = "rotateZ( 5deg )";
 
             //MOVES THE KNIFE TO THE LEFT, or ROTATE CCW, or move basket to the left
             if(knifeXloc>0 &&this.scene3 &&this.scene3time!=0)
@@ -535,6 +541,7 @@ class Cooking_Mama extends Scene_Component
           }); 
         this.key_triggered_button( "Move Right/Rotate counterclockwise", [ "v" ], ()=> 
           {
+                   sc4stewpic.style.WebkitTransform = "rotateZ( -5deg )";
             //MOVES THE KNIFE TO THE RIGHT, or ROTATE CW, or move basket to the right
                         console.log(ladelX,ladelY);
             if(knifeXloc<9 &&this.scene3&&this.scene3time!=0)
@@ -868,10 +875,10 @@ class Cooking_Mama extends Scene_Component
 
             var rotateM;
 
-             let maxAngle = (-1)*.2*Math.PI;
+             let maxAngle = .2*Math.PI;
              let angle = maxAngle/2 + (maxAngle/2) * Math.sin(0.0008*t);
              rotateM = Mat4.rotation(0.01*angle, Vec.of(0,0,1));
-             let rotateyM = Mat4.rotation(angle, Vec.of(0,1,0));
+             let rotateyM = Mat4.rotation(0.5*angle, Vec.of(0,1,0));
              let fallM = Mat4.translation([0,-0.02*t-(0.68*Math.pow(0.02*t,2)),0.1]);
              //let ifall = Mat4.translation([0,+0.1*(t-2)+(0.68*Math.pow(0.1*(t-2),2)),-0.1]);
              this.s2beef1=this.s2beef1/*.times(ifall)*/.times(fallM).times(rotateM).times(rotateyM);
@@ -895,7 +902,7 @@ class Cooking_Mama extends Scene_Component
              let maxAngle = (-1)*.2*Math.PI;
              let angle = maxAngle/2 + (maxAngle/2) * Math.sin(0.0008*t);
              rotateM = Mat4.rotation(0.01*angle, Vec.of(0,0,1));
-             let rotateyM = Mat4.rotation(angle, Vec.of(0,1,0));
+             let rotateyM = Mat4.rotation(-0.5*angle, Vec.of(0,1,0));
              let fallM = Mat4.translation([0,-0.02*t-(0.68*Math.pow(0.02*t,2)),0.1]);
              //let ifall = Mat4.translation([0,+0.1*(t-2)+(0.68*Math.pow(0.1*(t-2),2)),-0.1]);
              this.s2beef2=this.s2beef2/*.times(ifall)*/.times(fallM).times(rotateM).times(rotateyM);
@@ -918,7 +925,7 @@ class Cooking_Mama extends Scene_Component
              let maxAngle = (-1)*.2*Math.PI;
              let angle = maxAngle/2 + (maxAngle/2) * Math.sin(0.0008*t);
              rotateM = Mat4.rotation(0.01*angle, Vec.of(0,0,1));
-             let rotateyM = Mat4.rotation(angle, Vec.of(0,1,0));
+             let rotateyM = Mat4.rotation(0.5*angle, Vec.of(0,1,0));
              let fallM = Mat4.translation([0,-0.02*t-(0.68*Math.pow(0.02*t,2)),0.1]);
              //let ifall = Mat4.translation([0,+0.1*(t-2)+(0.68*Math.pow(0.1*(t-2),2)),-0.1]);
              this.s2beef3=this.s2beef3/*.times(ifall)*/.times(fallM).times(rotateM).times(rotateyM);
@@ -1097,11 +1104,14 @@ class Cooking_Mama extends Scene_Component
 
 
           this.ladel=this.scene4location;
-          this.ladel=this.ladel.times(Mat4.translation(Vec.of(0,0,1)));
+          this.ladel=this.ladel.times(Mat4.scale((Vec.of(0.7,0.7,0.7))))
+          this.ladel=this.ladel.times(Mat4.translation(Vec.of(-1,5,4.2)));
           var base_angle=Math.PI/2;
           this.ladel=this.ladel.times(Mat4.rotation(base_angle,Vec.of(1,0,0)));
-          this.ladel=this.ladel.times(Mat4.rotation(0.056,Vec.of(0,1,0))); //about 10 degrees
-          this.ladel=this.ladel.times(Mat4.rotation(2*(0.056+0.056+0.056),Vec.of(1,0,0)));
+          this.ladel=this.ladel.times(Mat4.rotation(Math.PI+0.3,Vec.of(0,1,0))); //about 10 degrees
+          this.ladel=this.ladel.times(Mat4.translation(Vec.of(0,-4,0)));
+          //this.ladel=this.ladel.times(Mat4.rotation(0.056,Vec.of(0,0,1)));
+          //this.ladel=this.ladel.times(Mat4.rotation(2*(0.056+0.056+0.056),Vec.of(1,0,0)));
           //this.ladel=this.ladel.times(Mat4.rotation(rot_ladel_angle,Vec.of(1,0,0))); //makes it more straight
           //z makes it spin around in a circle on its own axis
           //wait this shit is a circular translation lmfao
@@ -1181,7 +1191,7 @@ getRandomInt(max) {
 
             var scene4instructions=document.getElementById("sc4insns");
             
-
+            var sc4stewpic=document.getElementById("sc4stewpic");
             //this is dependent on which scene
             if(this.scene1)
             {
@@ -1358,6 +1368,8 @@ getRandomInt(max) {
             {
                   sc4.style.display='block';
                   tc.style.display='block';
+                  sc4stewpic.style.display='block';
+                  sc4stewpic.style.opacity='1';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               this.drawscene4(graphics_state);
@@ -1367,6 +1379,8 @@ getRandomInt(max) {
             else if(!this.scene4)
             {
               sc4.style.display='none';
+              sc4stewpic.style.display='none';
+              sc4stewpic.style.opacity='0';
             }
 
           if(this.scene5)

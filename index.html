@@ -38,14 +38,16 @@
 
   #sc2, #sc3, #sc4 {
     position: absolute;
-    width: 200px;
+    max-width: 250px;
     left: 50px;
+    border-radius:20px;
+    padding:20px;
     top:50px;
-    
-    text-shadow: 1.5px 1.5px pink, -1.5px -1.5px pink; 
-    color:black;
+    font-family: BubblegumSans;
+    color:#966c63;
+    background: rgba(255,255,255,0.5);
     /*text-shadow: 1px 1px blue, -1px -1px blue;*/
-    font-size:25px;
+    font-size:20px;
   }
 
   #sc5 {
@@ -126,6 +128,26 @@
     z-index:1;
   }
 
+  #sc4insns {
+
+  }
+
+  #sc4stewpic {
+    background-image:url("assets/stewpot.png");
+    width:225px;
+    height:165px;
+    position:absolute;
+    top:220px;
+    left:440px;
+    background-size: 225px 165px;
+    background-repeat: no-repeat;
+    background-color:transparent;
+    transition-delay: 2s;
+    webkit-transform = rotateY( 10deg );
+    webkit-transition:.2s ease-in-out;
+    transform-style: preserve-3d;
+  }
+
   div { background: white }
   canvas { width: 1080px; height: 600px; margin-bottom:-3px }
   .canvas-widget { width: 1080px; background: DimGray }
@@ -176,8 +198,6 @@
     </span>
 </div>
 
-<div style="position: absolute; left: 810px; top:75px; background-color:transparent; color:#966c63;font-family:BubblegumSans;"> Instructions:
-  </div>
     <span id="sc4insns" style="height:30px;"> </span>
 
 
@@ -191,23 +211,22 @@
 </div>
 
 
-<<<<<<< HEAD
-<div style="position: absolute; left: 255px; top:270px;color:white; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:45px"> <span id="gg"></span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
-=======
+
 <div style="position: absolute; left: 265px; top:270px;color:white; text-shadow: 1px 1px blue, -1px -1px blue; font-family: 'Times New Roman', 'Helvetica', 'sans-serif', cursive; font-size:20px"> <span id="gg"></span></div> <!--tHis is tagged as gg and when gg, we can display stuff-->
->>>>>>> 5b073425d22202fa3f8f74cbe501bf5dc4e484c2
   <div id = "sc1bg">h</div>
   <div id = "sc1"> <span class="accent">Welcome to Mama's kitchen!</span>
   <p>To play, press 2 to advance to next scene, and at the end of each scene, proceed by pressing the number corresponding to next scenes. To advance to next scenes, you must finish each scene before the game will allow you to advance!
+  <br /> Remember, use C to move left, and V to move right.
   </div> <!--tHis is tagged as gg and when gg, we can display stuff-->
   
 
-  <div id = "sc2">Food Dropping Scene: Reminder, some of the food is worth more. Use G for moving Left, J for moving Right. When time is up, you will have to move on to next scene and you will no longer be able to move the pot!</div> <!--tHis is tagged as scene2 and when scene2, we can display stuff-->
+  <div id = "sc2">Catch the food! Some of the food is worth more. </div> <!--tHis is tagged as scene2 and when scene2, we can display stuff-->
 
-  <div id = "sc3"> Food Cutting Scene:</div> <!--tHis is tagged as scene3 and when scene3, we can display stuff-->
+  <div id = "sc3"> </div> <!--tHis is tagged as scene3 and when scene3, we can display stuff-->
       <div style="position: absolute; left: 265px; top:270px; "><span id="sc3board" </span></div>
 
-  <div id= "sc4"> Food Mixing Scene:</div> <!--tHis is tagged as scene4 and when scene4, we can display stuff-->
+  <div id= "sc4"> </div> <!--tHis is tagged as scene4 and when scene4, we can display stuff-->
+  <div id= "sc4stewpic"> </div>
   <div id = "sc5bg">h</div>
   
   <div id="sc5"><span class="accent" style="text-decoration:none;color:#fff;text-shadow:2px 2px #684b45;">We're done! Thanks for helping mama cook! Here's the beef stew we made.
