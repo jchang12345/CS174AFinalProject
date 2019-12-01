@@ -533,7 +533,7 @@ class Cooking_Mama extends Scene_Component
             var time=document.getElementById("timer");
             var timeImg=document.getElementById("timeIMG");
             var deadclk=document.getElementById("deadtimeIMG");
-            
+            var ss=document.getElementById("ss");
 
             //this is dependent on which scene
             if(this.scene1)
@@ -661,6 +661,7 @@ class Cooking_Mama extends Scene_Component
                   sc5.style.display='block';
                   sc5bg.style.display='block';
                   tc.style.display='none';
+                  ss.innerHTML = this.score;
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               this.drawscene5(graphics_state);             
