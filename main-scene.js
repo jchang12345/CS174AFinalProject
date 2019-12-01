@@ -1540,6 +1540,8 @@ getRandomInt(max) {
             var sc4stewpic=document.getElementById("sc4stewpic");
 
             var sc4insnC=document.getElementById("sc4insnC");
+            
+
             //this is dependent on which scene
             if(this.scene1)
             {
@@ -1573,12 +1575,12 @@ getRandomInt(max) {
                   {
                                         console.log("cw");
 
-                    sc4insnC.innerHTML='<img src="assets/clkwise.ico"></img>';
+                    sc4insnC.innerHTML='<img src="assets/clkwise.png" width="20" />';
                   }
                   else if(sc4insnslist[0]==0)//ccw
                   {
                     console.log("ccw");
-                    sc4insnC.innerHTML= '<img src="assets/ccw.ico"></img>';
+                    sc4insnC.innerHTML= '<img src="assets/ccw.ico">';
                   }
                }
                while(count<20)
@@ -1666,7 +1668,7 @@ getRandomInt(max) {
             var tc=document.getElementById("timercontainer");
 
             var ss=document.getElementById("ss");
-
+            var sc4ins=document.getElementById("sc4ins");
             
             if(this.finished)
             {
@@ -1736,6 +1738,7 @@ getRandomInt(max) {
                   tc.style.display='block';
                   sc4stewpic.style.display='block';
                   sc4stewpic.style.opacity='1';
+                  sc4ins.style.display='block';
               //TODO:
               //set some tiemr so we know to display the "tutorial" for this scene
               this.drawscene4(graphics_state);
@@ -1747,6 +1750,7 @@ getRandomInt(max) {
               sc4.style.display='none';
               sc4stewpic.style.display='none';
               sc4stewpic.style.opacity='0';
+              sc4ins.style.display='none';
             }
 
           if(this.scene5)
