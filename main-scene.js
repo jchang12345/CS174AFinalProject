@@ -5,9 +5,9 @@ var use_mipMap2=false;
 var use_mipMap1=true;
 
 
-var knifeXloc=5;
-var knifeYloc=0;
-var knifeZloc=3;
+var knifeXloc=0;
+var knifeYloc=1;
+var knifeZloc=2;
 
 var potXloc=100;
 var potYloc=99;
@@ -48,11 +48,32 @@ class Cooking_Mama extends Scene_Component
                          // Kitchen cutting scene materials
                          //cylinder: new Subdivision_Sphere(), // for the knife's handle.
                          //board: new Cube() //for the cutting board, and the knife
-                      
+                       cutZone: new Cube_1(),
                        beef:      new Shape_From_File( "assets/food/beef.obj" ) ,
-                       carrot:      new Shape_From_File( "assets/food/carrot.obj" ) ,
+                       carrot:      new Shape_From_File( "assets/food/carrot.obj" ),
+                       carrotBA: new Shape_From_File( "assets/food/carrot_big_A.obj"),
+                       carrotBB: new Shape_From_File( "assets/food/carrot_big_B.obj"),
+                       carrotBC: new Shape_From_File( "assets/food/carrot_big_C.obj"),
+                       carrotBD: new Shape_From_File( "assets/food/carrot_big_D.obj"),
+                       carrotBE: new Shape_From_File( "assets/food/carrot_big_E.obj"),
+                       carrotSlice: new Shape_From_File( "assets/food/onion_small_B.obj" ),
                        onion:      new Shape_From_File( "assets/food/onion.obj" ) ,
+                       onionSA:      new Shape_From_File( "assets/food/onion_small_A.obj" ) ,
+                       onionSB: new Shape_From_File( "assets/food/onion_small_B.obj" ),
+                       onionSC: new Shape_From_File( "assets/food/onion_small_C.obj" ),
+                       onionSD: new Shape_From_File( "assets/food/onion_small_D.obj" ),
+                       onionBA: new Shape_From_File( "assets/food/onion_big_A.obj" ),
+                       onionBB: new Shape_From_File( "assets/food/onion_big_B.obj" ),
+                       onionBC: new Shape_From_File( "assets/food/onion_big_C.obj" ),
+                       onionBD: new Shape_From_File( "assets/food/onion_big_D.obj" ),
+                       onionXA: new Shape_From_File( "assets/food/onion_bad_A.obj" ),
+                       onionXB: new Shape_From_File( "assets/food/onion_bad_B.obj" ),
+                       onionXC: new Shape_From_File( "assets/food/onion_bad_C.obj" ),
+                       onionXD: new Shape_From_File( "assets/food/onion_bad_D.obj" ),
                        potato:      new Shape_From_File( "assets/food/potato.obj" ) ,
+                       potatoSA: new Shape_From_File( "assets/food/potato_small_A.obj" ),
+                       potatoBA: new Shape_From_File( "assets/food/potato_big_A.obj" ),
+                       potatoXA: new Shape_From_File( "assets/food/potato_bad_A.obj" ),
 
                        blade:      new Shape_From_File( "assets/knife/blade.obj" ) ,
                        handle:      new Shape_From_File( "assets/knife/handle.obj" ) ,
@@ -76,7 +97,7 @@ class Cooking_Mama extends Scene_Component
 
                                 // TODO:  Fill in as many additional material objects as needed in this key/value table.
                                 //        (Requirement 1)
-           
+           cutZone: context.get_instance(Phong_Shader).material(Color.of(0,0,0,0.1), {ambient:1}),   
             blade:   context.get_instance(Phong_Shader).material(Color.of(0.9,0.9,0.9,1), {ambient:1, diffusivity:1}),
            handle:   context.get_instance(Phong_Shader).material(Color.of(0.4,0.9,0.9,1), {ambient:1}),
 
@@ -89,8 +110,8 @@ class Cooking_Mama extends Scene_Component
           h_beef:      context.get_instance(Phong_Shader).material(Color.of(0.5,0,0,1), {ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
 
 
-           carrot:        context.get_instance(Phong_Shader_Shadow).material(Color.of(215/255,114/255,44/255,1), {ambient:0.3}) ,
-           onion:        context.get_instance(Phong_Shader_Shadow).material(Color.of(1,0.9,.9,1), {ambient:0.4}),
+           carrot:        context.get_instance(Phong_Shader_Shadow).material(Color.of(1,0.65,0,1), {ambient:1}) ,
+           onion:        context.get_instance(Phong_Shader_Shadow).material(Color.of(1,1,1,1), {ambient:0.95}),
            potato:       context.get_instance(Phong_Shader).material(Color.of(0,0,0,1), {texture: context.get_instance("assets/food/potato.png",true),ambient:0.8,specularity:0.8,diffusivity:0.25}) ,
            allfood:   context.get_instance(Phong_Shader).material(Color.of(0.3,0.3,0.3,1), {ambient:1}),
 
@@ -219,17 +240,16 @@ class Cooking_Mama extends Scene_Component
           //SCENE 3 OBJECTS BELOW
 
           this.beef=Mat4.identity();
-          this.beef=this.beef.times(Mat4.translation(Vec.of(5,0,0)));
+          this.beef=this.beef.times(Mat4.translation(Vec.of(0,0,0)));
 
           this.carrot=Mat4.identity();
-                      var rot=(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
-          this.carrot=this.carrot.times(Mat4.translation(Vec.of(5,5,0))).times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0)));
+          this.carrot=this.carrot.times(Mat4.rotation(Math.PI/2,Vec.of(0,1,0))).times(Mat4.translation(Vec.of(0,0,2)));
 
           this.onion=Mat4.identity();
           this.onion=this.onion.times(Mat4.translation(Vec.of(0,0,0)))
 
           this.potato=Mat4.identity();
-          this.potato =this.potato.times(Mat4.translation(Vec.of(-5,0,0))).times(Mat4.rotation(-Math.PI/2,Vec.of(0,1,0)));
+          this.potato =this.potato.times(Mat4.scale([2,1,1]));
 
 
          // this.pot2=Mat4.identity();
@@ -237,7 +257,14 @@ class Cooking_Mama extends Scene_Component
          // this.pot2=this.pot2.times(Mat4.scale(1.1,1.1,1));
           //this.pot2=this.pot2.times(Mat4.rotation(Math.PI,Vec.of(0,0,1)));
 
+          this.onionFlag = 0; //SCENE 3 INITIAL STATE! ONION DRAWN
+          this.onionBad = [-1,-1,-1,-1]; //STATE ARRAY FOR SLICED OFF PIECES: -1 UNINITIALIZED, 0 GOOD, 1 BAD
 
+          this.carrotFlag = -1; //SCENE 3 HAS CARROT IN UNINITIALIZED STATE! CARROT NOT DRAWN
+          this.carrotBad = [-1,-1,-1,-1,-1]; 
+            
+          this.potatoFlag = -1; 
+          this.potatoBad = [-1,-1,-1,-1,-1];
 
           this.cuttingboard=Mat4.identity();
           this.cuttingboard=this.cuttingboard.times(Mat4.translation(Vec.of(0,0,-3)));
@@ -482,9 +509,9 @@ class Cooking_Mama extends Scene_Component
             sc4stewpic.style.WebkitTransform = "rotateZ( 5deg )";
 
             //MOVES THE KNIFE TO THE LEFT, or ROTATE CCW, or move basket to the left
-            if(knifeXloc>0 &&this.scene3 &&this.scene3time!=0)
+            if(knifeXloc> -5 && knifeZloc == 2 && this.scene3 &&this.scene3time!=0)
             {
-              knifeXloc=knifeXloc-1;
+              knifeXloc = knifeXloc - 0.1;
             }
 
             if(potXloc>90 &&this.scene2 &&this.scene2time!=0)
@@ -544,9 +571,9 @@ class Cooking_Mama extends Scene_Component
                    sc4stewpic.style.WebkitTransform = "rotateZ( -5deg )";
             //MOVES THE KNIFE TO THE RIGHT, or ROTATE CW, or move basket to the right
                         console.log(ladelX,ladelY);
-            if(knifeXloc<9 &&this.scene3&&this.scene3time!=0)
+            if(knifeXloc < 5 && knifeZloc == 2 && this.scene3&&this.scene3time!=0)
             {
-              knifeXloc=knifeXloc+1;
+              knifeXloc=knifeXloc+0.1;
             }
             if(potXloc<109 &&this.scene2&&this.scene2time!=0)
             {
@@ -605,20 +632,24 @@ class Cooking_Mama extends Scene_Component
         this.key_triggered_button( "Perform Cut", [ "b" ], ()=> 
           {
             //KNIFE SCENE ONLY, performs a cut. 
-            if(knifeZloc>0 &&this.scene3&&this.scene3time!=0)
+            if(knifeZloc == 2  &&this.scene3&&this.scene3time!=0)
             {
-
-            knifeZloc=knifeZloc-3;
-            }            //timer.start();
-            //setTimeout(timer.stop(),1000);
-            //knifeZloc=knifeZloc+3;
+              knifeZloc = knifeZloc - 2;
+            }            
           });
-        this.key_triggered_button("Pull cut back", ["y"],()=>
+        this.key_triggered_button("Next Food", ["y"],()=>
         {
-          if(knifeZloc<6 &&this.scene3 &&this.scene3time!=0)
-          {
-            knifeZloc=knifeZloc+3;        
-          } 
+          if(this.onionFlag == 4){ //CLEAN UP CUTTING BOARD IF ONION DONE
+              this.onionFlag = 5;
+              this.carrotFlag = 0;
+          }
+          else if(this.carrotFlag == 5){ //CLEAN UP CUTTING BOARD IF CARROT DONE
+              this.carrotFlag = 6;
+              this.potatoFlag = 0;
+          }
+          else if(this.potatoFlag == 6){ //CLEAN UP CUTTING BOARD IF POTATO DONE
+                this.potatoFlag = 7;
+          }
         }
         );
 
@@ -634,7 +665,7 @@ class Cooking_Mama extends Scene_Component
           {
             this.stop3cuttime=t;
             //draw scene normally
-            this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef); //camera this.attach can only stick onto like this.beef...
+            //this.shapes.beef.draw(graphics_state,this.beef,this.materials.beef); //camera this.attach can only stick onto like this.beef...
           }
           else if(knifeZloc==0)
           {
@@ -647,14 +678,96 @@ class Cooking_Mama extends Scene_Component
               if(this.scene3cuttime<this.stop3cuttime+1)
               {
                 this.scene3cuttime=t;
-                this.shapes.beef.draw(graphics_state,this.beef,this.materials.h_beef);//;({color: Color.of( .5,0,0, 1 ));
+                //this.shapes.beef.draw(graphics_state,this.beef,this.materials.h_beef);//;({color: Color.of( .5,0,0, 1 ));
                 //also can animate or change something aside from changing score.
               }
             else
             {
-            this.score=this.score+500; //base score increase
+            if(this.onionFlag < 4){ //IF ONION NOT DONE, DEFAULT STATE
+                this.cutLoc = 0; //INITIALIZE CUT ACCURACY POINT
+                  switch(this.onionFlag){ //SET CUT ACCURACY POINT AT CURRENT GUIDELINE LOCATIONS
+                        case(0):
+                              this.cutLoc = 0.75;
+                              break;
+                        case(1):
+                              this.cutLoc = 0.2;
+                              break;
+                        case(2):
+                              this.cutLoc = -0.3;
+                              break;
+                        case(3):
+                              this.cutLoc = -0.7;
+                  }
+                  this.scoreIncrease = Math.min(500, 500 - (Math.max(this.cutLoc - knifeXloc, knifeXloc - this.cutLoc)) * 500); //FORMULA FOR CUT ACCURACY
+                  this.score = this.score + Math.trunc(this.scoreIncrease); //ADD THAT TO CURRENT SCORE
+                  if(this.scoreIncrease < 250) //IF CUT BAD ACCURACY, IT IS A BAD CUT
+                        this.onionBad[this.onionFlag] = 1;
+                  else 
+                        this.onionBad[this.onionFlag] = 0;
+                  
+                  this.onionFlag = this.onionFlag + 1; //MOVE ON TO NEXT CUT PHASE
+          }
+          else if(this.onionFlag == 5 && this.carrotFlag < 5){
+                this.cutLoc = 0;
+                switch(this.carrotFlag){
+                      case(0):
+                        this.cutLoc = -1.2;
+                        break;
+                      case(1):
+                        this.cutLoc = -0.8;
+                        break;
+                      case(2):
+                        this.cutLoc = 0.1;
+                        break;
+                      case(3):
+                        this.cutLoc = 0.8;
+                        break;
+                      case(4):
+                        this.cutLoc = 1.2;
+                        break;
+                      case(5):
+                        this.cutLoc = 1.6;
+                }
+                this.scoreIncrease = Math.min(500, 500 - (Math.max(this.cutLoc - knifeXloc, knifeXloc - this.cutLoc)) * 500);
+                this.score = this.score + Math.trunc(this.scoreIncrease);
+                if(this.scoreIncrease < 250)
+                  this.carrotBad[this.carrotFlag] = 1;
+                else
+                  this.carrotBad[this.carrotFlag] = 0;
+                this.carrotFlag = this.carrotFlag + 1;
+          }
+          else if(this.carrotFlag == 6 && this.potatoFlag < 5){
+                this.cutLoc = 0;
+                switch(this.potatoFlag){
+                      case(0):
+                        this.cutLoc = 1.4;
+                        break;
+                      case(1):
+                        this.cutLoc = 1.0;
+                        break;
+                      case(2):
+                        this.cutLoc = 0.6;
+                        break;
+                      case(3):
+                        this.cutLoc = 0.2;
+                        break;
+                      case(4):
+                        this.cutLoc = -0.2;
+                        break;
+                      case(5):
+                        this.cutLoc = -0.6;
+                        break;
+                }
+                this.scoreIncrease = Math.min(500, 500 - (Math.max(this.cutLoc - knifeXloc, knifeXloc - this.cutLoc)) * 500);
+                this.score = this.score + Math.trunc(this.scoreIncrease);
+                if(this.scoreIncrease < 250)
+                  this.potatoBad[this.potatotFlag] = 1;
+                else
+                  this.potatoBad[this.potatoFlag] = 0;
+                this.potatoFlag = this.potatoFlag + 1;
+          }
             this.scene3cuttime=t;
-            knifeZloc=knifeZloc+3; //pull it back up for them
+            knifeZloc=knifeZloc+2; //pull it back up for them
             beef_color_def=0.3;
 
             }
@@ -1048,15 +1161,149 @@ class Cooking_Mama extends Scene_Component
 
       drawscene3(graphics_state,t)
       {
-        //food cutting scene!
-        //this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.shadow);
-        this.shapes.carrot.draw(graphics_state,this.carrot,this.materials.carrot);
+        if(this.onionFlag != -1 && this.onionFlag != 5){ //IF ONION CUTTING NOT INITIALIZED OR DONE, DISPLAY ONION
+              this.onionSAMat = this.onion.times( Mat4.translation([3,0,0]) ).times( Mat4.rotation(-0.55,Vec.of(0,1,0)) ).times( Mat4.scale([0.4,0.4,0.4]) ); //MATRICES FOR SLICED PIECES
+              this.onionXAMat = this.onion.times( Mat4.translation([3,0,0]) ).times( Mat4.rotation(-0.55,Vec.of(0,1,0)) ).times( Mat4.scale([0.3,0.3,0.4]) );
+              this.onionSBMat = this.onion.times( Mat4.translation([2,0,0]) ).times( Mat4.rotation(-0.3,Vec.of(0,1,0)) ).times( Mat4.scale([0.35,0.35,0.35]));
+              this.onionXBMat = this.onion.times( Mat4.translation([2,0,0]) ).times( Mat4.rotation(-0.3,Vec.of(0,1,0)) ).times( Mat4.scale([0.25,0.25,0.35]));
+              this.onionSCMat = this.onion.times( Mat4.translation([1,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.8,0.45,0.45]));
+              this.onionXCMat = this.onion.times( Mat4.translation([1,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.6,0.3,0.3]));
+              this.onionSDMat = this.onion.times( Mat4.translation([0.25,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.35,0.35,0.35]));
+              this.onionXDMat = this.onion.times( Mat4.translation([0.25,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.25,0.25,0.25]));
+              if(this.onionFlag == 0){ //FIRST CUT PHASE
+                  this.onionInitMat = this.onion.times( Mat4.translation([0.1,0,0.3]) ).times( Mat4.scale([1.1,1.1,1.1]) ); //SLIGHTLY CHANGE DEFAULT ONION SHAPE
+                  this.shapes.onion.draw(graphics_state,this.onionInitMat,this.materials.onion);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([0.75,0,0])).times( Mat4.scale([0.05,1.5,2]) ); //CREATE GUIDELINE FOR WHERE TO CUT
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.onionFlag == 1){
+                  this.shapes.onionBA.draw(graphics_state,this.onion,this.materials.onion);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([0.2,0,0]) ).times( Mat4.scale([0.05,1.5,2]) ); 
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.onionFlag == 2){     
+                  this.onionBBMat = this.onion.times( Mat4.translation([-0.1,0,-0.2]) ).times( Mat4.scale([0.95,0.95,0.95]) ); //ONION_BIG MODELS GET DISTORTED AND NEED TO BE TRANSFORMED      
+                  this.shapes.onionBB.draw(graphics_state,this.onionBBMat,this.materials.onion);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([-0.3,0,0]) ).times( Mat4.scale([0.05,1.5,2]) );
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
 
-        this.shapes.onion.draw(graphics_state,this.onion,this.materials.onion);
-                //this.shapes.onion.draw(graphics_state,this.onion,this.materials.shadow);
-        this.shapes.potato.draw(graphics_state,this.potato,this.materials.potato);
+              }
+              if(this.onionFlag == 3){
+                  this.onionBCMat = this.onion.times( Mat4.translation([-0.3,0,-0.3]) ).times( Mat4.scale([0.7,0.7,0.7]) );       
+                  this.shapes.onionBC.draw(graphics_state,this.onionBCMat,this.materials.onion);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([-0.7,0,0]) ).times( Mat4.scale([0.05,1.5,2]) );
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.onionFlag > 3){ //DONE CUTTING AND CAN MOVE ON TO NEXT FOOD; CUTTING MORE DOES NOTHING
+                  this.onionBDMat = this.onion.times( Mat4.translation([-0.7,0,-0.3]) ).times( Mat4.rotation(0.3,Vec.of(0,1,0)) ).times( Mat4.scale([0.4,0.4,0.4]) );       
+                  this.shapes.onionBD.draw(graphics_state,this.onionBDMat,this.materials.onion);
+              }
+              if(this.onionBad[0] == 1) //ONION SLICES SHOULD PERSIST AFTER BEING CUT
+                  this.shapes.onionXA.draw(graphics_state,this.onionXAMat,this.materials.onion);           
+              else if(this.onionBad[0] == 0)
+                  this.shapes.onionSA.draw(graphics_state,this.onionSAMat,this.materials.onion);
+              if(this.onionBad[1] == 1)
+                       this.shapes.onionXB.draw(graphics_state,this.onionXBMat,this.materials.onion);
+              else if(this.onionBad[1] == 0)
+                       this.shapes.onionSB.draw(graphics_state,this.onionSBMat,this.materials.onion);
+              if(this.onionBad[2] == 1)
+                       this.shapes.onionXC.draw(graphics_state,this.onionXCMat,this.materials.onion);
+              else if(this.onionBad[2] == 0)
+                       this.shapes.onionSC.draw(graphics_state,this.onionSCMat,this.materials.onion);
+              if(this.onionBad[3] == 1)
+                  this.shapes.onionXD.draw(graphics_state,this.onionXDMat,this.materials.onion);           
+              else if(this.onionBad[3] == 0)
+                  this.shapes.onionSD.draw(graphics_state,this.onionSDMat,this.materials.onion);
+        }
+        if(this.carrotFlag != -1 && this.carrotFlag != 6){ 
+              this.carrotSAMat = this.onion.times( Mat4.translation([-3,0,0]) ).times( Mat4.rotation(0,Vec.of(0,1,0)) ).times( Mat4.scale([0.45,0.1,0.1]) ); //CARROTS SLICE MUST USE ONION SLICE MODEL BECAUSE IT WAS TOO DIFFICULT TO MAKE CARROT SLICE OBJ
+              this.carrotXAMat = this.onion.times( Mat4.translation([-3,0,0]) ).times( Mat4.rotation(0,Vec.of(0,1,0)) ).times( Mat4.scale([0.3,0.1,0.1]) ); //BAD CARROT SLICES ARE SLIGHTLY NARROWER
+              this.carrotSBMat = this.onion.times( Mat4.translation([-2.25,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.5,0.115,0.115]));
+              this.carrotXBMat = this.onion.times( Mat4.translation([-2.25,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.3,0.115,0.115]));
+              this.carrotSCMat = this.onion.times( Mat4.translation([-1.5,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.6,0.14,0.14]));
+              this.carrotXCMat = this.onion.times( Mat4.translation([-1.5,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.4,0.14,0.14]));
+              this.carrotSDMat = this.onion.times( Mat4.translation([-0.5,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.6,0.19,0.19]));
+              this.carrotXDMat = this.onion.times( Mat4.translation([-0.5,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.4,0.19,0.19]));
+              this.carrotSEMat = this.onion.times( Mat4.translation([0.4,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.5,0.24,0.24]));
+              this.carrotXEMat = this.onion.times( Mat4.translation([0.4,0,0]) ).times( Mat4.rotation(-0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.3,0.24,0.24]));
+              if(this.carrotFlag == 0){
+                  this.carrotInit = this.carrot.times( Mat4.translation([0,0,-0.5]) ).times( Mat4.scale([1.6,1.6,1.6]) );
+                  this.shapes.carrot.draw(graphics_state,this.carrotInit,this.materials.carrot);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([-1.2,0,0])).times( Mat4.scale([0.05,1.5,2]) ); //MUST USE ONION MATRIX FOR GUIDELINE BECAUSE CARROT'S IS ROTATED
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.carrotFlag == 1){
+                  this.carrotBAMat = this.carrot.times( Mat4.translation([0,0,-0.5]) ).times( Mat4.scale([1.3,1.3,1.5]) );
+                  this.shapes.carrotBA.draw(graphics_state,this.carrotBAMat,this.materials.carrot);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([-0.8,0,0]) ).times( Mat4.scale([0.05,1.5,2]) );
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.carrotFlag == 2){     
+                  this.carrotBBMat = this.carrot.times( Mat4.translation([0,0,-.3]) ).times( Mat4.scale([1,1,1.25]) );       
+                  this.shapes.carrotBB.draw(graphics_state,this.carrotBBMat,this.materials.carrot);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([0.1,0,0]) ).times( Mat4.scale([0.05,1.5,2]) );
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
 
-
+              }
+              if(this.carrotFlag == 3){
+                  this.carrotBCMat = this.carrot.times( Mat4.translation([0,0,-0.3]) ).times( Mat4.scale([0.9,0.9,0.9]) );       
+                  this.shapes.carrotBC.draw(graphics_state,this.carrotBCMat,this.materials.carrot);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([0.8,0,0]) ).times( Mat4.scale([0.05,1.5,2]) );
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.carrotFlag == 4){
+                  this.carrotBDMat = this.carrot.times( Mat4.translation([-0.3,0,-0.3]) ).times( Mat4.scale([0.7,0.7,0.7]) );       
+                  this.shapes.carrotBD.draw(graphics_state,this.carrotBDMat,this.materials.carrot);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([1.2,0,0]) ).times( Mat4.scale([0.05,1.5,2]) );
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.carrotFlag > 4){
+                  this.carrotBEMat = this.onion.times( Mat4.translation([1.4,0,0]) ).times( Mat4.rotation(0.1,Vec.of(0,1,0)) ).times( Mat4.scale([0.4,0.3,0.3]));      
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotBEMat,this.materials.carrot);
+              }
+              if(this.carrotBad[0] == 1)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotXAMat,this.materials.carrot);           
+              else if(this.carrotBad[0] == 0)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotSAMat,this.materials.carrot);
+              if(this.carrotBad[1] == 1)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotXBMat,this.materials.carrot);           
+              else if(this.carrotBad[1] == 0)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotSBMat,this.materials.carrot);
+              if(this.carrotBad[2] == 1)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotXCMat,this.materials.carrot);           
+              else if(this.carrotBad[2] == 0)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotSCMat,this.materials.carrot);
+              if(this.carrotBad[3] == 1)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotXDMat,this.materials.carrot);           
+              else if(this.carrotBad[3] == 0)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotSDMat,this.materials.carrot);
+              if(this.carrotBad[4] == 1)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotXEMat,this.materials.carrot);           
+              else if(this.carrotBad[4] == 0)
+                  this.shapes.carrotSlice.draw(graphics_state,this.carrotSEMat,this.materials.carrot);
+              
+        }
+        if(this.potatoFlag != -1 && this.potatoFlag != 6){ //CURRENTLY IN PROGRESS; MAY REMOVE 
+              this.potatoSAMat = this.potato.times( Mat4.translation([2,-0.5,0]) ).times( Mat4.scale([0.1,0.3,0.3]) ); 
+              this.potatoXAMat = this.potato.times( Mat4.translation([2,-0.5,0]) ).times( Mat4.scale([0.1,0.3,0.3]) ); 
+              if(this.potatoFlag == 0){ 
+                  this.shapes.potato.draw(graphics_state,this.potato,this.materials.potato);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([1.4,0,0])).times( Mat4.scale([0.05,1.5,2]) );
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+              if(this.potatoFlag >= 1){
+                  this.potatoBAMat = this.potato.times( Mat4.translation([-0.3,0,0]) );
+                  this.shapes.potatoBA.draw(graphics_state,this.potatoBAMat,this.materials.potato);
+                  this.cutZoneMat = this.onion.times( Mat4.translation([0.7,0,0]) ).times( Mat4.scale([0.05,1.5,2]) ); 
+                  this.shapes.cutZone.draw(graphics_state,this.cutZoneMat,this.materials.cutZone);
+              }
+           
+              if(this.potatoBad[0] == 1) 
+                  this.shapes.potatoXA.draw(graphics_state,this.potatoXAMat,this.materials.potato);           
+              else if(this.potatoBad[0] == 0)
+                  this.shapes.potatoSA.draw(graphics_state,this.potatoSAMat,this.materials.potato);
+              
+        }
 
         //NEEDS TO UPDATE POSITIONS else it wont know i am moving....
 
