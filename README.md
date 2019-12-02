@@ -1,6 +1,6 @@
 CS174A Final Project: Cook with Mama
 ====================================
-Made by Jessica Cheng (304973591), Justin Chang(), and Jason Chen()
+Made by Justin Chang(), Jason Chen(404792137), and Jessica Cheng (304973591)
 
 ## 1. Our Project
 Help mama cook her delicious meals!
